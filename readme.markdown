@@ -109,4 +109,4 @@ License
 
 ![Creative Commons License](http://i.creativecommons.org/l/by-nc-sa/2.5/au/88x31.png)
 
-**VBoxHeadlessTray** by [Topten Software](http://www.toptensoftware.com) is licensed under a [Creative Commons Attribution-Noncommercial-Share Alike 2.5 Australia License](http://creativecommons.org/licenses/by-nc-sa/2.5/au/).
+**VBoxHeadlessTray** by [Topten Software](http://www.toptensoftware.com/VBoxHeadlessTray) is licensed under a [Creative Commons Attribution-Noncommercial-Share Alike 2.5 Australia License](http://creativecommons.org/licenses/by-nc-sa/2.5/au/).
