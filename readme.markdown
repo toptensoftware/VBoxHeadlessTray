@@ -10,7 +10,7 @@ A simple windows app that runs a VirtualBox VM as a tray icon.
 To use
 ------
 
-1. Download [VBoxHeadelessTray.zip](http://www.toptensoftware.com/downloads/VBoxHeadlessTray.zip)
+1. Download [VBoxHeadelessTray.zip](http://cloud.github.com/downloads/toptensoftware/VBoxHeadlessTray/VBoxHeadlessTray.zip)
 
 1. Extract the zip file to a suitable directory
 
