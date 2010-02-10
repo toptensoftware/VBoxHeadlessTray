@@ -249,7 +249,7 @@ HRESULT CVBoxMachine::Exec(const wchar_t* pszCommandLine, DWORD* ppid, HANDLE* p
 	memset(&pi, 0, sizeof(pi));
 
 	// Create the process
-	if (!CreateProcess(NULL, str.GetBuffer(), NULL, NULL, TRUE, 0/*CREATE_NO_WINDOW*/, NULL, NULL, &si, &pi))
+	if (!CreateProcess(NULL, str.GetBuffer(), NULL, NULL, TRUE, CREATE_NO_WINDOW, NULL, NULL, &si, &pi))
 	{
 		return HRESULT_FROM_WIN32(GetLastError());
 	}
