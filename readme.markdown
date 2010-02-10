@@ -73,8 +73,11 @@ commmand is available (either Running or Stopped).
 
 	VBoxManage guestproperty set devvm "VBoxHeadlessTray\ContextMenus\browse\context" "Running"
 
-Build Instructions
+
+Source Code and Build Instructions
 ---
+
+Source code for VBoxHeadlessTray is available from [github](http://github.com/toptensoftware/VBoxHeadlessTray).
 
 To build:
 
