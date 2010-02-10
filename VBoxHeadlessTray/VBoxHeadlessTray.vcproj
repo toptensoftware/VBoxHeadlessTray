@@ -171,6 +171,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				IgnoreImportLibrary="true"
+				OutputFile="$(OutDir)\$(ProjectName)64.exe"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="..\..\SimpleLib\lib"
 				GenerateDebugInformation="true"
@@ -352,6 +353,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				IgnoreImportLibrary="true"
+				OutputFile="$(OutDir)\$(ProjectName)64.exe"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="..\..\SimpleLib\lib"
 				GenerateDebugInformation="true"
