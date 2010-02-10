@@ -17,7 +17,7 @@ CMainWindow::CMainWindow()
 
 CMainWindow::~CMainWindow() 
 {
-	
+		
 };
 
 bool CMainWindow::Create()
@@ -46,12 +46,17 @@ LRESULT CMainWindow::OnCreate(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHa
 
 	m_NotifyIcon.Create(m_hWnd);
 
-	UpdateTrayIcon();
-
 	m_Machine.SetMachineName(g_strMachineName);
 	m_Machine.SetEventHandler(this);
-	m_Machine.PowerUp();
+	HRESULT hr=m_Machine.Open();
+	if (FAILED(hr))
+	{
+		SlxMessageBox(Format(L"Failed to open machine %s - %s", g_strMachineName, m_Machine.GetErrorMessage()));
+	}
 
+	UpdateTrayIcon();
+
+	m_Machine.PowerUp();
 
 	return 0;
 }
@@ -76,7 +81,11 @@ void CMainWindow::UpdateTrayIcon(bool bTextToo, MachineState state)
 
 	if (bTextToo)
 	{
-		m_NotifyIcon.SetToolTip(Format(L"VBoxHeadlessTray - %s - %s", g_strMachineName, GetMachineStateDescription(state)));
+		CUniString str=Format(L"VBoxHeadlessTray - %s - %s", g_strMachineName, GetMachineStateDescription(state));
+		DWORD dwPid=m_Machine.GetHeadlessPid();
+		if (dwPid!=0)
+			str.Append(Format(L" (pid:%i)", dwPid));
+		m_NotifyIcon.SetToolTip(str);
 	}
 
 	bool bNeedTimer=false;
@@ -89,6 +98,7 @@ void CMainWindow::UpdateTrayIcon(bool bTextToo, MachineState state)
 			break;
 
 		case MachineState_Aborted:
+		case MachineState_Teleported:
 			hIcon=m_hIconAborted;
 			break;
 
@@ -105,8 +115,11 @@ void CMainWindow::UpdateTrayIcon(bool bTextToo, MachineState state)
 			break;
 
 		case MachineState_Saving:
-		case MachineState_Discarding:
 		case MachineState_Stopping:
+		case MachineState_DeletingSnapshot:
+		case MachineState_Teleporting:
+		case MachineState_LiveSnapshotting:
+		case MachineState_TeleportingPausedVM:
 			hIcon=m_hIconTransition[2-m_iAnimationFrame];
 			bNeedTimer=true;
 			break;
@@ -114,6 +127,8 @@ void CMainWindow::UpdateTrayIcon(bool bTextToo, MachineState state)
 		case MachineState_Restoring:
 		case MachineState_Starting:
 		case MachineState_SettingUp:
+		case MachineState_TeleportingIn:
+		case MachineState_RestoringSnapshot:
 			hIcon=m_hIconTransition[m_iAnimationFrame];
 			bNeedTimer=true;
 			break;
@@ -289,16 +304,6 @@ LRESULT CMainWindow::OnTrayExit(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& 
 
 LRESULT CMainWindow::OnTrayPowerOn(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled)
 {
-	if (!m_Machine.IsOpen())
-	{
-		log("Respawning self for second power up\n");
-		CUniString strCommandLine=Format(L"%s %s -respawn", SlxGetModuleFileName(NULL), g_strMachineName);
-		WinExec(strCommandLine);
-
-		PostQuitMessage(0);
-		return 0;
-	}
-
 	m_Machine.PowerUp();
 	return 0;
 }
@@ -486,6 +491,13 @@ LRESULT CMainWindow::OnCustomCommand(WORD wNotifyCode, WORD wID, HWND hWndCtl, B
 		}
 	}
 
+	return 0;
+}
+
+// WM_DESTROY Handler
+LRESULT CMainWindow::OnDestroy(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
+{
+	m_Machine.Close();
 	return 0;
 }
 

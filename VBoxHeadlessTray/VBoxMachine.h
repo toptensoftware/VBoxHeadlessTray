@@ -6,14 +6,9 @@
 
 #include "Utils.h"
 
-#define _F_INPROC_VM
-
-
 const wchar_t* GetMachineStateDescription(MachineState s);
 
 class __declspec(uuid("46137EEC-703B-4fe5-AFD4-7C9BBBBA0259")) LibVirtualBox;
-
-#define VMM_MACHINE_STOPPED		(WM_USER + 100)
 
 template <class Base>
 class CComObjectNoRef : public Base
@@ -126,10 +121,7 @@ public:
 };
 
 // CVBoxMachine Class
-class CVBoxMachine : 
-	public CPostableObject
-
-
+class CVBoxMachine
 {
 public:
 // Construction
@@ -145,6 +137,7 @@ public:
 	MachineState GetState();
 	CUniString GetErrorMessage();
 
+	HRESULT Open();
 	void Close();
 	bool PowerUp();
 	bool PowerDown();
@@ -154,8 +147,8 @@ public:
 	bool Reset();
 	bool IsOpen() { return m_spVirtualBox!=NULL; }
 
-	IConsole* GetConsole() { return m_spConsole; };
 	IMachine* GetMachine() { return m_spMachine; };
+	DWORD GetHeadlessPid() { return m_dwHeadlessPid; }
 
 
 // Operations
@@ -164,182 +157,93 @@ public:
 protected:
 // Attributes
 	CComPtr<IVirtualBox>	m_spVirtualBox;
-	CComPtr<ISession>		m_spSession;
 	CComPtr<IMachine>		m_spMachine;
-	CComPtr<IConsole>		m_spConsole;
 	CComBSTR				m_bstrMachineID;
 	CUniString				m_strMachineName;
 	CUniString				m_strLastError;
 	IVBoxMachineEvents*		m_pEvents;
 	MachineState			m_State;
-
+	bool					m_bCallbackRegistered;
+	DWORD					m_dwHeadlessPid;
 
 	bool SetError(const wchar_t* psz);
+	void OnMachineStateChange(const wchar_t* pszMachineID, MachineState State);
+	HRESULT Exec(const wchar_t* pszCommandLine, DWORD* ppid=NULL);
 
 // Operations
-	class CConsoleEvents : 
+
+	class CVirtualBoxEvents : 
 		public CComObjectRootEx<CComSingleThreadModel>,
-		public IDispatchImpl<IConsoleCallback, &__uuidof(IConsoleCallback), &__uuidof(LibVirtualBox), kTypeLibraryMajorVersion, kTypeLibraryMinorVersion>
+		public IDispatchImpl<IVirtualBoxCallback, &__uuidof(IVirtualBoxCallback), &__uuidof(LibVirtualBox), kTypeLibraryMajorVersion, kTypeLibraryMinorVersion>
 	{
 	public:
+		BEGIN_COM_MAP(CVirtualBoxEvents)
+			COM_INTERFACE_ENTRY(IDispatch)
+			COM_INTERFACE_ENTRY(IVirtualBoxCallback)
+		END_COM_MAP()
 
-	BEGIN_COM_MAP(CConsoleEvents)
-		COM_INTERFACE_ENTRY(IDispatch)
-		COM_INTERFACE_ENTRY(IConsoleCallback)
-	END_COM_MAP()
 
-		STDMETHOD(Invoke)(DISPID dispidMember, REFIID riid,
-				LCID lcid, WORD wFlags, DISPPARAMS* pdispparams, VARIANT* pvarResult,
-				EXCEPINFO* pexcepinfo, UINT* puArgErr)
+        virtual HRESULT STDMETHODCALLTYPE OnMachineStateChange( 
+            /* [in] */ BSTR aMachineId,
+            /* [in] */ MachineState aState) 
 		{
-			return __super::Invoke(dispidMember,riid,lcid,wFlags,pdispparams,pvarResult,pexcepinfo,puArgErr);
-		}
-
-		STDMETHODIMP OnMousePointerShapeChange(
-			BOOL aVisible,
-			BOOL aAlpha,
-			ULONG aXHot,
-			ULONG aYHot,
-			ULONG aWidth,
-			ULONG aHeight,
-			BYTE * aShape
-		)
-		{
-			return S_OK;
+			CVBoxMachine* pThis=OUTERCLASS(CVBoxMachine, m_VirtualBoxEvents);
+			pThis->OnMachineStateChange(aMachineId, aState);
+			return E_NOTIMPL; 
 		};
-		STDMETHODIMP OnMouseCapabilityChange(
-			BOOL aSupportsAbsolute,
-			BOOL aNeedsHostCursor
-		)
-		{
-			CVBoxMachine* pThis=OUTERCLASS(CVBoxMachine, m_ConsoleCallback);
-			if (aSupportsAbsolute && pThis->m_spConsole)
-			{
-				CComPtr<IMouse> spMouse;
-				pThis->m_spConsole->get_Mouse(&spMouse);
-				if (spMouse)
-				{
-					spMouse->PutMouseEventAbsolute(-1, -1, 0, 0);
-				}
-			}
-			return S_OK;
-		};
-		STDMETHODIMP OnKeyboardLedsChange(
-			BOOL aNumLock,
-			BOOL aCapsLock,
-			BOOL aScrollLock
-		)
-		{
-			return S_OK;
-		};
-		STDMETHODIMP OnStateChange(
-			MachineState aState
-		)
-		{
-			CVBoxMachine* pThis=OUTERCLASS(CVBoxMachine, m_ConsoleCallback);
-			log("State change: %S\n", GetMachineStateDescription(aState));
-			pThis->m_State=aState;
-			pThis->m_pEvents->OnStateChange(aState);
-			if (aState<MachineState_Running)
-			{
-				pThis->Post(VMM_MACHINE_STOPPED);
-			}
-			return S_OK;
-		};
-		STDMETHODIMP OnAdditionsStateChange()
-		{
-			return S_OK;
-		};
-		STDMETHODIMP OnDVDDriveChange()
-		{
-			return S_OK;
-		};
-		STDMETHODIMP OnFloppyDriveChange()
-		{
-			return S_OK;
-		};
-		STDMETHODIMP OnNetworkAdapterChange(
-			INetworkAdapter * aNetworkAdapter
-		)
-		{
-			return S_OK;
-		};
-		STDMETHODIMP OnSerialPortChange(
-			ISerialPort * aSerialPort
-		)
-		{
-			return S_OK;
-		};
-		STDMETHODIMP OnParallelPortChange(
-			IParallelPort * aParallelPort
-		)
-		{
-			return S_OK;
-		};
-		STDMETHODIMP OnStorageControllerChange()
-		{
-			return S_OK;
-		};
-		STDMETHODIMP OnVRDPServerChange()
-		{
-			return S_OK;
-		};
-		STDMETHODIMP OnUSBControllerChange()
-		{
-			return S_OK;
-		};
-		STDMETHODIMP OnUSBDeviceStateChange(
-			IUSBDevice * aDevice,
-			BOOL aAttached,
-			IVirtualBoxErrorInfo * aError
-		)
-		{
-			return S_OK;
-		};
-		STDMETHODIMP OnSharedFolderChange(
-			Scope aScope
-		)
-		{
-			return S_OK;
-		};
-		STDMETHODIMP OnRuntimeError(
-			BOOL aFatal,
-			BSTR aId,
-			BSTR aMessage
-		)
-		{
-			return S_OK;
-		};
-		STDMETHODIMP OnCanShowWindow(
-			BOOL * aCanShow
-		)
-		{
-			if (!aCanShow)
-				return E_POINTER;
-			/* Headless windows should not be shown */
-			*aCanShow = FALSE;
-			return S_OK;
-		};
-		STDMETHODIMP OnShowWindow(
-			ULONG64 * aWinId
-		)
-		{
-			ASSERT(FALSE);
-			if (!aWinId)
-				return E_POINTER;
-			*aWinId = 0;
-			return E_NOTIMPL;
-		};
+        
+        virtual HRESULT STDMETHODCALLTYPE OnMachineDataChange( 
+            /* [in] */ BSTR aMachineId) { return E_NOTIMPL; };
+        
+        virtual HRESULT STDMETHODCALLTYPE OnExtraDataCanChange( 
+            /* [in] */ BSTR aMachineId,
+            /* [in] */ BSTR aKey,
+            /* [in] */ BSTR aValue,
+            /* [out] */ BSTR *aError,
+            /* [retval][out] */ BOOL *aAllowChange) { return E_NOTIMPL; };
+        
+        virtual HRESULT STDMETHODCALLTYPE OnExtraDataChange( 
+            /* [in] */ BSTR aMachineId,
+            /* [in] */ BSTR aKey,
+            /* [in] */ BSTR aValue) { return E_NOTIMPL; };
+        
+        virtual HRESULT STDMETHODCALLTYPE OnMediumRegistered( 
+            /* [in] */ BSTR aMediumId,
+            /* [in] */ DeviceType aMediumType,
+            /* [in] */ BOOL aRegistered) { return E_NOTIMPL; };
+        
+        virtual HRESULT STDMETHODCALLTYPE OnMachineRegistered( 
+            /* [in] */ BSTR aMachineId,
+            /* [in] */ BOOL aRegistered) { return E_NOTIMPL; };
+        
+        virtual HRESULT STDMETHODCALLTYPE OnSessionStateChange( 
+            /* [in] */ BSTR aMachineId,
+            /* [in] */ SessionState aState) { return E_NOTIMPL; };
+        
+        virtual HRESULT STDMETHODCALLTYPE OnSnapshotTaken( 
+            /* [in] */ BSTR aMachineId,
+            /* [in] */ BSTR aSnapshotId) { return E_NOTIMPL; };
+        
+        virtual HRESULT STDMETHODCALLTYPE OnSnapshotDiscarded( 
+            /* [in] */ BSTR aMachineId,
+            /* [in] */ BSTR aSnapshotId) { return E_NOTIMPL; };
+        
+        virtual HRESULT STDMETHODCALLTYPE OnSnapshotChange( 
+            /* [in] */ BSTR aMachineId,
+            /* [in] */ BSTR aSnapshotId) { return E_NOTIMPL; };
+        
+        virtual HRESULT STDMETHODCALLTYPE OnGuestPropertyChange( 
+            /* [in] */ BSTR aMachineId,
+            /* [in] */ BSTR aName,
+            /* [in] */ BSTR aValue,
+            /* [in] */ BSTR aFlags) { return E_NOTIMPL; };
 	};
 
-	CComObjectNoRef<CConsoleEvents>	m_ConsoleCallback;
 
-#ifndef _F_INPROC_VM
+	CComObjectNoRef<CVirtualBoxEvents>	m_VirtualBoxEvents;
+
 	HRESULT StartHeadlessProcess();
-#endif
-	bool HandleProgress(const wchar_t* pszOp, HRESULT hr, IProgress* pProgress);
-	bool HandleResult(const wchar_t* pszOp, HRESULT hr);
-	virtual LRESULT OnMessage(UINT nMessage, WPARAM wParam, LPARAM lParam);
+
 };
 
 #endif	// __VBOXMACHINE_H

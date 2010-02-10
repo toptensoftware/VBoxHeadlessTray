@@ -103,11 +103,6 @@ extern "C" int WINAPI _tWinMain(HINSTANCE /*hInstance*/, HINSTANCE /*hPrevInstan
 				ShowHelp();
 				return 7;
 			}
-			else if (IsEqualStringI(strSwitch, L"respawn"))
-			{
-				// Wait for old process to die
-				Sleep(200);
-			}
 			else
 			{
 				SlxMessageBox(Format(L"Unrecognised switch: %s\n", args[i]), MB_OK|MB_ICONHAND);

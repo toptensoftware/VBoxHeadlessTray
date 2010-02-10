@@ -21,8 +21,8 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="c:\program files\sun\virtualbox"
-			IntermediateDirectory="$(ConfigurationName)"
+			OutputDirectory="$(PlatformName)\$(ConfigurationName)"
+			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
 			ConfigurationType="1"
 			UseOfATL="2"
 			ATLMinimizesCRunTimeLibraryUsage="false"
@@ -81,6 +81,7 @@
 				Name="VCLinkerTool"
 				IgnoreImportLibrary="true"
 				LinkIncremental="2"
+				AdditionalLibraryDirectories="..\..\SimpleLib\lib"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				RandomizedBaseAddress="1"
@@ -112,7 +113,7 @@
 		</Configuration>
 		<Configuration
 			Name="Debug|x64"
-			OutputDirectory="c:\program files\sun\virtualbox"
+			OutputDirectory="$(PlatformName)\$(ConfigurationName)"
 			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
 			ConfigurationType="1"
 			UseOfATL="2"
@@ -171,6 +172,7 @@
 				Name="VCLinkerTool"
 				IgnoreImportLibrary="true"
 				LinkIncremental="2"
+				AdditionalLibraryDirectories="..\..\SimpleLib\lib"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				RandomizedBaseAddress="1"
@@ -202,8 +204,8 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="$(ConfigurationName)"
-			IntermediateDirectory="$(ConfigurationName)"
+			OutputDirectory="$(PlatformName)\$(ConfigurationName)"
+			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
 			ConfigurationType="1"
 			UseOfATL="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
@@ -260,6 +262,7 @@
 				Name="VCLinkerTool"
 				IgnoreImportLibrary="true"
 				LinkIncremental="1"
+				AdditionalLibraryDirectories="..\..\SimpleLib\lib"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				OptimizeReferences="2"
@@ -350,6 +353,7 @@
 				Name="VCLinkerTool"
 				IgnoreImportLibrary="true"
 				LinkIncremental="1"
+				AdditionalLibraryDirectories="..\..\SimpleLib\lib"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				OptimizeReferences="2"
@@ -390,10 +394,6 @@
 			Filter="cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx"
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
-			<File
-				RelativePath=".\ConsoleProcess.cpp"
-				>
-			</File>
 			<File
 				RelativePath=".\MainWindow.cpp"
 				>
@@ -456,10 +456,6 @@
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
-			<File
-				RelativePath=".\ConsoleProcess.h"
-				>
-			</File>
 			<File
 				RelativePath=".\MainWindow.h"
 				>

@@ -39,9 +39,33 @@
 
 using namespace ATL;
 
-#include <SimpleLibAtlCom.h>
+/*
+
+	To build:
+
+	* Get and build SimpleLib to build this project.  
+
+		git://github.com/toptensoftware/SimpleLib.git
+
+	* Get the VirtualBox SDK:
+
+		http://download.virtualbox.org/virtualbox/vboxsdkdownload.html
+
+	* Expected folder structure is:
+
+		\YourProjectsFolder
+			\SimpleLib
+			\VBoxHeadlessTray
+			\SDKs
+				\VirtualBox
+					\sdk
+
+*/
+
+
+#include "../../SimpleLib/SimpleLibAtlCom.h"
+#include "../../SDKs/VirtualBox/sdk/bindings/mscom/include/VirtualBox.h"
+
+
 using namespace Simple;
-
-
-#include "VirtualBox.h"
 

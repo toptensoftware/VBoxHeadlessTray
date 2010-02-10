@@ -41,6 +41,7 @@ BEGIN_MSG_MAP(CMainWindow)
 	MESSAGE_HANDLER(WM_QUERYENDSESSION, OnQueryEndSession)
 	MESSAGE_HANDLER(WM_ENDSESSION, OnEndSession)
 	COMMAND_RANGE_HANDLER(ID_CUSTOM_COMMAND_0, ID_CUSTOM_COMMAND_N, OnCustomCommand)
+	MESSAGE_HANDLER(WM_DESTROY, OnDestroy)
 END_MSG_MAP()
 
 	LRESULT OnCreate(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
@@ -57,6 +58,7 @@ END_MSG_MAP()
 	LRESULT OnQueryEndSession(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
 	LRESULT OnEndSession(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
 	LRESULT OnCustomCommand(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled);
+	LRESULT OnDestroy(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
 	// Handler Insert Pos(CMainWindow)
 
 	// Create the icon
