@@ -60,7 +60,7 @@ LRESULT CMainWindow::OnCreate(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHa
 
 	UpdateTrayIcon();
 
-	if (g_bPowerOnMachine)
+	if (g_bPowerOnMachine && m_Machine.GetState()<=MachineState_Running)
 		m_Machine.PowerUp();
 
 	return 0;
@@ -284,9 +284,9 @@ LRESULT CMainWindow::OnTrayExit(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& 
 	log("Removing autorun entries\n");
 	ManageAutoRun(Format(L"VBoxHeadlessTray %s", g_strMachineName), maroClear, NULL);
 
-	if (m_Machine.GetState()<MachineState_Running)
+	if (m_Machine.GetState()<MachineState_Running || m_Machine.GetHeadlessPid()==0)
 	{
-		log("Machine stopped, exiting immediately\n");
+		log("Machine stopped or not launched by us, exiting immediately\n");
 		PostQuitMessage(0);
 	}
 	else
@@ -437,12 +437,12 @@ LRESULT CMainWindow::OnEndSession(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL&
 		log("Waiting...\n");
 
 		// Dispatch messages until machine is closed
-		while (m_Machine.IsOpen())
+		while (m_Machine.GetState()>=MachineState_Running)
 		{
 			WaitMessage();
 
 			MSG msg;
-			while (PeekMessage(&msg, 0, 0, 0, PM_REMOVE) && m_Machine.IsOpen())
+			while (PeekMessage(&msg, 0, 0, 0, PM_REMOVE) && m_Machine.GetState()>=MachineState_Running)
 			{
 				if (!IsInputMessage(msg.message))
 					DispatchMessage(&msg);
@@ -451,13 +451,12 @@ LRESULT CMainWindow::OnEndSession(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL&
 
 		log("Saved.\n");
 
-		// Check machine is closed
-		ASSERT(!m_Machine.IsOpen());
+		m_NotifyIcon.Delete();
+		m_Machine.Close();
 	}
 
 
 	SlxShutdownBlockReasonDestroy(m_hWnd);
-
 	log("Shutdown block released\n");
 	return 0;
 }

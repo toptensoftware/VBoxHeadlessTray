@@ -165,10 +165,11 @@ protected:
 	MachineState			m_State;
 	bool					m_bCallbackRegistered;
 	DWORD					m_dwHeadlessPid;
+	HANDLE					m_hHeadlessProcess;
 
 	bool SetError(const wchar_t* psz);
 	void OnMachineStateChange(const wchar_t* pszMachineID, MachineState State);
-	HRESULT Exec(const wchar_t* pszCommandLine, DWORD* ppid=NULL);
+	HRESULT Exec(const wchar_t* pszCommandLine, DWORD* ppid=NULL, HANDLE* phProcess=NULL);
 
 // Operations
 

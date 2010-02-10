@@ -22,7 +22,7 @@ To use
 
 If a VBoxHeadlessTray machine running when Windows is shutdown, it will automatically 
 save the machine's state and on Windows restarting, VBoxHeadlessTray will restart itself 
-automatically and resume the VM.
+automatically and resume the VM.  
 
 To prevent a machine starting at windows logon, exit VBoxHeadlessTray before shutting 
 down windows, or use the -np option.
@@ -78,4 +78,3 @@ Known Issues
 ------------
 
 None
-

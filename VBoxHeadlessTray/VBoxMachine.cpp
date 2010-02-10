@@ -92,6 +92,7 @@ CVBoxMachine::CVBoxMachine()
 	m_State=MachineState_Null;
 	m_bCallbackRegistered=false;
 	m_dwHeadlessPid=0;
+	m_hHeadlessProcess=NULL;
 }
 
 // Destructor
@@ -216,6 +217,8 @@ void CVBoxMachine::OnMachineStateChange(const wchar_t* pszMachineID, MachineStat
 		case MachineState_Teleported:
 		case MachineState_Aborted:
 			m_dwHeadlessPid=0;
+			CloseHandle(m_hHeadlessProcess);
+			m_hHeadlessProcess=NULL;
 			break;
 	}
 
@@ -227,7 +230,7 @@ void CVBoxMachine::OnMachineStateChange(const wchar_t* pszMachineID, MachineStat
 }
 
 
-HRESULT CVBoxMachine::Exec(const wchar_t* pszCommandLine, DWORD* ppid)
+HRESULT CVBoxMachine::Exec(const wchar_t* pszCommandLine, DWORD* ppid, HANDLE* phProcess)
 {
 	// Work out path to vbox
 	CUniString strVBoxPath;
@@ -246,13 +249,21 @@ HRESULT CVBoxMachine::Exec(const wchar_t* pszCommandLine, DWORD* ppid)
 	memset(&pi, 0, sizeof(pi));
 
 	// Create the process
-	if (!CreateProcess(NULL, str.GetBuffer(), NULL, NULL, TRUE, CREATE_NO_WINDOW, NULL, NULL, &si, &pi))
+	if (!CreateProcess(NULL, str.GetBuffer(), NULL, NULL, TRUE, 0/*CREATE_NO_WINDOW*/, NULL, NULL, &si, &pi))
 	{
 		return HRESULT_FROM_WIN32(GetLastError());
 	}
 
-	// Close handles
-	CloseHandle(pi.hProcess);
+
+	// Close/return handles
+	if (phProcess)
+	{
+		phProcess[0]=pi.hProcess;
+	}
+	else
+	{
+		CloseHandle(pi.hProcess);
+	}
 	CloseHandle(pi.hThread);
 
 	// Return the process ID
@@ -266,13 +277,42 @@ HRESULT CVBoxMachine::Exec(const wchar_t* pszCommandLine, DWORD* ppid)
 
 bool CVBoxMachine::PowerUp()
 {	
-	Exec(L"\"{vboxdir}\\VBoxHeadless.exe\" --startvm \"{machinename}\"", &m_dwHeadlessPid);
+	if (m_State>=MachineState_Running)
+		return true;
+
+	ASSERT(m_hHeadlessProcess==NULL);
+	Exec(L"\"{vboxdir}\\VBoxHeadless.exe\" --startvm \"{machinename}\"", &m_dwHeadlessPid, &m_hHeadlessProcess);
 	return true;
 }
 
 bool CVBoxMachine::SaveState()
 {
-	Exec(L"\"{vboxdir}\\VBoxManage.exe\" controlvm \"{machinename}\" savestate");
+	// We need to do save state without creating VBoxManage process since, we can't launch a process
+	// while Windows is shutting down.
+	if (m_spMachine)
+	{
+		log("Creating session\n");
+		ClearComErrorInfo();
+		CComPtr<ISession> spSession;
+		HRESULT hr=spSession.CoCreateInstance(__uuidof(Session));
+		if (FAILED(hr))
+		{
+			return SetError(Format(L"Failed to create VirtualBox session object - %s", vboxFormatError(hr)));
+		}
+
+		// Open existing session
+		if (SUCCEEDED(m_spVirtualBox->OpenExistingSession(spSession, m_bstrMachineID)))
+		{
+			CComPtr<IConsole> spConsole;
+			if (SUCCEEDED(spSession->get_Console(&spConsole)))
+			{
+				CComPtr<IProgress> spProgress;
+				spConsole->SaveState(&spProgress);
+			}
+		}
+
+	}
+
 	return true;
 }
 
