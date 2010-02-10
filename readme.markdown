@@ -105,6 +105,8 @@ None
 License
 -------
 
-<a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/2.5/au/">
-	<img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-nc-sa/2.5/au/88x31.png" />
-</a><br /><span xmlns:dc="http://purl.org/dc/elements/1.1/" property="dc:title">VBoxHeadlessTray</span> by <a xmlns:cc="http://creativecommons.org/ns#" href="http://www.toptensoftware.com/quickprompts" property="cc:attributionName" rel="cc:attributionURL">Topten Software</a> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/2.5/au/">Creative Commons Attribution-Noncommercial-Share Alike 2.5 Australia License</a>.
+## License ##
+
+![Creative Commons License](http://i.creativecommons.org/l/by-nc-sa/2.5/au/88x31.png)
+
+**VBoxHeadlessTray** by [Topten Software](http://www.toptensoftware.com) is licensed under a [Creative Commons Attribution-Noncommercial-Share Alike 2.5 Australia License](http://creativecommons.org/licenses/by-nc-sa/2.5/au/).
