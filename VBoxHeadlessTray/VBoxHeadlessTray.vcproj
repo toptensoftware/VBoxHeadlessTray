@@ -564,7 +564,15 @@
 			SourceControlFiles="false"
 			>
 		</Filter>
+		<File
+			RelativePath="..\readme.markdown"
+			>
+		</File>
 	</Files>
 	<Globals>
+		<Global
+			Name="RESOURCE_FILE"
+			Value="VBoxHeadlessTray.rc"
+		/>
 	</Globals>
 </VisualStudioProject>

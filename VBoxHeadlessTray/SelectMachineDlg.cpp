@@ -54,6 +54,8 @@ HRESULT CSelectMachineDlg::RefreshList()
 
 	cb.SetCurSel(0);
 
+	CheckDlgButton(IDC_POWERONMACHINE, m_bPowerOnMachine);
+
 	return S_OK;
 }
 
@@ -71,6 +73,7 @@ LRESULT CSelectMachineDlg::OnOK(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& 
 		return 0;
 
 	m_strMachineName=bstrMachineName;
+	m_bPowerOnMachine=!!IsDlgButtonChecked(IDC_POWERONMACHINE);
 
 	EndDialog(wID);
 	return 0;

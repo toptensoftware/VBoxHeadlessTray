@@ -9,6 +9,8 @@
 #define IDI_ICON1                       202
 #define IDI_ICON                        202
 #define IDC_LIST1                       202
+#define IDC_CHECK1                      203
+#define IDC_POWERONMACHINE              203
 #define IDI_ICONABORTED                 209
 #define IDI_ICONOFF                     210
 #define IDI_ICONPAUSED                  211
@@ -42,7 +44,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        217
 #define _APS_NEXT_COMMAND_VALUE         32782
-#define _APS_NEXT_CONTROL_VALUE         203
+#define _APS_NEXT_CONTROL_VALUE         204
 #define _APS_NEXT_SYMED_VALUE           104
 #endif
 #endif

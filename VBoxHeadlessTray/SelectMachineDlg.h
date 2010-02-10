@@ -17,6 +17,7 @@ public:
 	enum { IDD = IDD_SELECTMACHINEDLG };
 
 	CUniString m_strMachineName;
+	bool		m_bPowerOnMachine;
 
 BEGIN_MSG_MAP(CSelectMachineDlg)
 	MESSAGE_HANDLER(WM_INITDIALOG, OnInitDialog)

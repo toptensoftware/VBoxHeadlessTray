@@ -54,9 +54,14 @@ LRESULT CMainWindow::OnCreate(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHa
 		SlxMessageBox(Format(L"Failed to open machine %s - %s", g_strMachineName, m_Machine.GetErrorMessage()));
 	}
 
+	// Turn off auto run
+	log("Adding autorun entries\n");
+	ManageAutoRun(Format(L"VBoxHeadlessTray %s", g_strMachineName), maroSet, Format(L"%s\"%s\"", (g_bPowerOnMachine ? L"" : L"-np "), g_strMachineName));
+
 	UpdateTrayIcon();
 
-	m_Machine.PowerUp();
+	if (g_bPowerOnMachine)
+		m_Machine.PowerUp();
 
 	return 0;
 }
@@ -67,14 +72,6 @@ void CMainWindow::UpdateTrayIcon(bool bTextToo, MachineState state)
 	{
 		// Get current machine state
 		state=m_Machine.GetState();
-	}
-
-	// If it's running, turn on autorun
-	if (state==MachineState_Running)
-	{
-		// Turn off auto run
-		log("Adding autorun entries\n");
-		ManageAutoRun(Format(L"VBoxHeadlessTray %s", g_strMachineName), maroSet, Format(L"\"%s\"", g_strMachineName));
 	}
 
 	m_NotifyIcon.StartUpdate();

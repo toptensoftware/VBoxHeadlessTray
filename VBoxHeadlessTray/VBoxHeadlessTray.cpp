@@ -10,6 +10,7 @@
 #pragma comment(linker,"/manifestdependency:\"type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
 
 CUniString g_strMachineName;
+bool g_bPowerOnMachine=true;
 
 class CVBoxHeadlessTrayModule : public CAtlExeModuleT< CVBoxHeadlessTrayModule >
 {
@@ -51,7 +52,10 @@ HRESULT CVBoxHeadlessTrayModule::Run(int nShowCmd)
 void ShowHelp()
 {
 	SlxMessageBox(L"VBoxHeadlessTray © 2009 Topten Software.  All Rights Reserved\n\n"
-					L"Usage: VBoxHeadlessTray [-?|-h] <machinename>", MB_OK|MB_ICONINFORMATION);
+					L"Usage: VBoxHeadlessTray [-?|-h] [-np] <machinename>\n\n"
+					L"  -np: don't power on the machine\n"
+					L"  -h:  show this help\n"
+					, MB_OK|MB_ICONINFORMATION);
 	return;
 }
 
@@ -103,6 +107,10 @@ extern "C" int WINAPI _tWinMain(HINSTANCE /*hInstance*/, HINSTANCE /*hPrevInstan
 				ShowHelp();
 				return 7;
 			}
+			else if (IsEqualString(strSwitch, L"np"))
+			{
+				g_bPowerOnMachine=false;
+			}
 			else
 			{
 				SlxMessageBox(Format(L"Unrecognised switch: %s\n", args[i]), MB_OK|MB_ICONHAND);
@@ -126,9 +134,11 @@ extern "C" int WINAPI _tWinMain(HINSTANCE /*hInstance*/, HINSTANCE /*hPrevInstan
 	if (IsEmptyString(g_strMachineName))
 	{
 		CSelectMachineDlg dlg;
+		dlg.m_bPowerOnMachine=g_bPowerOnMachine;
 		if (dlg.DoModal()!=IDOK)
 			return 7;
 		g_strMachineName=dlg.m_strMachineName;
+		g_bPowerOnMachine=dlg.m_bPowerOnMachine;
 	}
 
 
