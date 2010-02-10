@@ -1,11 +1,10 @@
-﻿VBoxHeadlessTray v1.1
-=====================
-
+﻿VBoxHeadlessTray
+================
 
 What is it?
 -----------
 
-A simple windows app that runs a VirtualBox VM as a tray icon.
+VBoxHeadlessTray is simple windows app that runs a VirtualBox VM as a tray icon.
 	
 To use
 ------
