@@ -11,13 +11,13 @@ To use
 
 1. Download [VBoxHeadlessTray.zip](http://www.toptensoftware.com/downloads/VBoxHeadlessTray.zip)
 
-1. Extract the zip file to a suitable directory
+2. Extract the zip file to a suitable directory
 
-2. Run the correct version (x64/Win32) for your platform. (double click in windows explorer)
+3. Run the correct version (x64/Win32) for your platform. (double click in windows explorer)
 
-3. Select a machine from the displayed list.  VBoxHeadlessTray will powerup the machine.
+4. Select a machine from the displayed list.  VBoxHeadlessTray will powerup the machine.
 
-4. Right click the tray icon to start/stop/save etc...
+5. Right click the tray icon to start/stop/save etc...
 
 If a VBoxHeadlessTray machine is running when Windows is shutdown, it will automatically 
 save the machine's state and on Windows restarting, VBoxHeadlessTray will restart itself 
