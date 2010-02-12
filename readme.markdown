@@ -4,7 +4,14 @@
 What is it?
 -----------
 
-VBoxHeadlessTray is simple windows app that runs a VirtualBox VM as a tray icon.
+VBoxHeadlessTray is simple windows app that runs a VirtualBox VM as a tray icon:
+
+![TrayIcon](http://www.toptensoftware.com/VBoxHeadlessTray/tray1.png)
+
+Common commands are readily available from the context menu:
+
+![TrayMenu](http://www.toptensoftware.com/VBoxHeadlessTray/tray2.png)
+	
 	
 To use
 ------
@@ -28,11 +35,11 @@ automatically and resume the VM.
 To prevent a machine starting at windows logon, exit VBoxHeadlessTray before shutting 
 down windows, or use the -np option.
 
-### Version 1.1 
+### Version 1.1 ### 
 
 * Initial version, basic functionality and custom context menus
 
-### Version 1.2
+### Version 1.2 ###
 
 * Added ACPI commands for power button and sleep button (requires guest additions to be installed in the guest OS)
 * Added a new command to launch Remote Desktop for the hosted machine
