@@ -17,6 +17,9 @@
 		/>
 	</Platforms>
 	<ToolFiles>
+		<ToolFile
+			RelativePath=".\NSIS.rules"
+		/>
 	</ToolFiles>
 	<Configurations>
 		<Configuration
@@ -33,6 +36,9 @@
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="BuildNSIS"
 			/>
 			<Tool
 				Name="VCXMLDataGeneratorTool"
@@ -125,15 +131,18 @@
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
+				ExecutionBucket="2"
+			/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"
+				ExecutionBucket="3"
 			/>
 			<Tool
 				Name="VCXMLDataGeneratorTool"
 			/>
 			<Tool
-				Name="VCWebServiceProxyGeneratorTool"
-			/>
-			<Tool
 				Name="VCMIDLTool"
+				ExecutionBucket="4"
 				PreprocessorDefinitions="_DEBUG"
 				MkTypLibCompatible="false"
 				TargetEnvironment="3"
@@ -146,6 +155,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
+				ExecutionBucket="5"
 				Optimization="0"
 				PreprocessorDefinitions="WIN32;_WINDOWS;_DEBUG"
 				MinimalRebuild="true"
@@ -158,18 +168,22 @@
 			/>
 			<Tool
 				Name="VCManagedResourceCompilerTool"
+				ExecutionBucket="6"
 			/>
 			<Tool
 				Name="VCResourceCompilerTool"
+				ExecutionBucket="7"
 				PreprocessorDefinitions="_DEBUG"
 				Culture="1033"
 				AdditionalIncludeDirectories="$(IntDir)"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
+				ExecutionBucket="8"
 			/>
 			<Tool
 				Name="VCLinkerTool"
+				ExecutionBucket="9"
 				IgnoreImportLibrary="true"
 				OutputFile="$(OutDir)\$(ProjectName)64.exe"
 				LinkIncremental="2"
@@ -182,25 +196,35 @@
 			/>
 			<Tool
 				Name="VCALinkTool"
+				ExecutionBucket="10"
 			/>
 			<Tool
 				Name="VCManifestTool"
+				ExecutionBucket="11"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
+				ExecutionBucket="12"
 			/>
 			<Tool
 				Name="VCBscMakeTool"
+				ExecutionBucket="13"
 			/>
 			<Tool
 				Name="VCFxCopTool"
-			/>
-			<Tool
-				Name="VCAppVerifierTool"
+				ExecutionBucket="14"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
 				CommandLine=""
+				ExecutionBucket="15"
+			/>
+			<Tool
+				Name="BuildNSIS"
+				ExecutionBucket="16"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
 			/>
 		</Configuration>
 		<Configuration
@@ -217,6 +241,9 @@
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="BuildNSIS"
 			/>
 			<Tool
 				Name="VCXMLDataGeneratorTool"
@@ -309,6 +336,9 @@
 			/>
 			<Tool
 				Name="VCCustomBuildTool"
+			/>
+			<Tool
+				Name="BuildNSIS"
 			/>
 			<Tool
 				Name="VCXMLDataGeneratorTool"
@@ -561,14 +591,48 @@
 				>
 			</File>
 		</Filter>
-		<Filter
-			Name="Generated Files"
-			SourceControlFiles="false"
-			>
-		</Filter>
 		<File
 			RelativePath="..\readme.markdown"
 			>
+		</File>
+		<File
+			RelativePath=".\VBoxHeadless_License.txt"
+			>
+		</File>
+		<File
+			RelativePath=".\VBoxHeadlessTraySetup.nsi"
+			>
+			<FileConfiguration
+				Name="Debug|Win32"
+				ExcludedFromBuild="true"
+				>
+				<Tool
+					Name="BuildNSIS"
+				/>
+			</FileConfiguration>
+			<FileConfiguration
+				Name="Debug|x64"
+				ExcludedFromBuild="true"
+				>
+				<Tool
+					Name="BuildNSIS"
+				/>
+			</FileConfiguration>
+			<FileConfiguration
+				Name="Release|Win32"
+				>
+				<Tool
+					Name="BuildNSIS"
+				/>
+			</FileConfiguration>
+			<FileConfiguration
+				Name="Release|x64"
+				ExcludedFromBuild="true"
+				>
+				<Tool
+					Name="BuildNSIS"
+				/>
+			</FileConfiguration>
 		</File>
 	</Files>
 	<Globals>

@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<VisualStudioToolFile
+	Name="NSIS Build"
+	Version="8.00"
+	>
+	<Rules>
+		<CustomBuildRule
+			Name="BuildNSIS"
+			DisplayName="Make NSIS Installer"
+			CommandLine="&quot;$(ProgramFiles)\nsis\makensis.exe&quot; [AllOptions] [inputs]"
+			Outputs="$(InputName).exe"
+			FileExtensions="*.nsi"
+			ExecutionDescription="Building NSIS script..."
+			>
+			<Properties>
+				<StringProperty
+					Name="Defines"
+					DisplayName="Additional Defines"
+					Switch="/D[value]"
+					Delimited="true"
+					Delimiters=";, "
+				/>
+			</Properties>
+		</CustomBuildRule>
+	</Rules>
+</VisualStudioToolFile>
