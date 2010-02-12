@@ -35,13 +35,17 @@ BEGIN_MSG_MAP(CMainWindow)
 	COMMAND_ID_HANDLER(ID_TRAY_SAVESTATE, OnTraySaveState)
 	COMMAND_ID_HANDLER(ID_TRAY_RESET, OnTrayReset)
 	COMMAND_ID_HANDLER(ID_TRAY_PAUSE, OnTrayPause)
-	COMMAND_ID_HANDLER(ID_TRAY_UNPAUSE, OnTrayUnPause)
 //	COMMAND_ID_HANDLER(ID_TRAY_OPENREMOTEDESKTOPCONNECTION, OnOpenRemoteDesktopConnection)
 	MESSAGE_HANDLER(WM_TIMER, OnTimer)
 	MESSAGE_HANDLER(WM_QUERYENDSESSION, OnQueryEndSession)
 	MESSAGE_HANDLER(WM_ENDSESSION, OnEndSession)
 	COMMAND_RANGE_HANDLER(ID_CUSTOM_COMMAND_0, ID_CUSTOM_COMMAND_N, OnCustomCommand)
 	MESSAGE_HANDLER(WM_DESTROY, OnDestroy)
+	COMMAND_ID_HANDLER(ID_TRAY_SHUTDOWN, OnTrayShutdown)
+	COMMAND_ID_HANDLER(ID_TRAY_SLEEP, OnTraySleep)
+	COMMAND_ID_HANDLER(ID_TRAY_GOHEADLESS, OnTrayGoHeadless)
+	COMMAND_ID_HANDLER(ID_TRAY_VBOXGUI, OnTrayVBoxGui)
+	COMMAND_ID_HANDLER(ID_TRAY_REMOTEDESKTOP, OnRemoteDesktop)
 END_MSG_MAP()
 
 	LRESULT OnCreate(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
@@ -59,6 +63,11 @@ END_MSG_MAP()
 	LRESULT OnEndSession(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
 	LRESULT OnCustomCommand(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled);
 	LRESULT OnDestroy(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled);
+	LRESULT OnTrayShutdown(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled);
+	LRESULT OnTraySleep(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled);
+	LRESULT OnTrayGoHeadless(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled);
+	LRESULT OnTrayVBoxGui(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled);
+	LRESULT OnRemoteDesktop(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled);
 	// Handler Insert Pos(CMainWindow)
 
 	// Create the icon
@@ -70,7 +79,7 @@ END_MSG_MAP()
 	CSmartHandle<HICON>	m_hIconAborted;
 	CSmartHandle<HICON>	m_hIconRunning;
 	CSmartHandle<HICON>	m_hIconTransition[3];
-	bool		m_bQuitOnClosed;
+	int			m_iSaveStateReason;
 	CVBoxMachine	m_Machine;
 	bool		m_bTimerRunning;
 	int			m_iAnimationFrame;

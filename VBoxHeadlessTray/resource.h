@@ -37,13 +37,24 @@
 #define ID_TRAY_OPENREMOTEDESKTOPCONNECTION 32779
 #define ID_TRAY_PAUSE                   32780
 #define ID_TRAY_UNPAUSE                 32781
+#define ID_TRAYON_SHUTDOWN              32782
+#define ID_TRAY_SHUTDOWN                32783
+#define ID_TRAYON_SLEEP                 32784
+#define ID_TRAY_SLEEP                   32785
+#define ID_TRAYON_ACPI                  32786
+#define ID_TRAYON_SAVEANDOPENWITHVIRTUALBOXGUI 32787
+#define ID_TRAY_VBOXGUI                 32788
+#define ID_TRAYON_OPENREMOTEDESKTOP     32789
+#define ID_TRAYON_GOHEADLESS            32790
+#define ID_TRAY_GOHEADLESS              32791
+#define ID_TRAY_REMOTEDESKTOP           32792
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        217
-#define _APS_NEXT_COMMAND_VALUE         32782
+#define _APS_NEXT_COMMAND_VALUE         32793
 #define _APS_NEXT_CONTROL_VALUE         204
 #define _APS_NEXT_SYMED_VALUE           104
 #endif

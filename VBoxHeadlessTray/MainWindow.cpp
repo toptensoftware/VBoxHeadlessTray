@@ -10,7 +10,7 @@
 
 CMainWindow::CMainWindow()
 {
-	m_bQuitOnClosed=false;
+	m_iSaveStateReason=0;
 	m_bTimerRunning=false;
 	m_iAnimationFrame=0;
 }
@@ -177,10 +177,29 @@ LRESULT CMainWindow::OnNotifyRButtonUp(UINT uMsg, WPARAM wParam, LPARAM lParam, 
 	if (state==MachineState_Paused)
 	{
 		DeleteMenu(hMenus, ID_TRAY_PAUSE, MF_BYCOMMAND);
+		EnableMenuItem(hMenus, ID_TRAY_RESET, MF_BYCOMMAND|MF_DISABLED);
+		EnableMenuItem(hMenus, ID_TRAY_SHUTDOWN, MF_BYCOMMAND|MF_DISABLED);
+		EnableMenuItem(hMenus, ID_TRAY_SLEEP, MF_BYCOMMAND|MF_DISABLED);
 	}
 	else
 	{
 		DeleteMenu(hMenus, ID_TRAY_UNPAUSE, MF_BYCOMMAND);
+	}
+
+	if (m_Machine.GetHeadlessPid()==0)
+	{
+		DeleteMenu(hMenus, ID_TRAY_VBOXGUI, MF_BYCOMMAND);
+	}
+	else
+	{
+		DeleteMenu(hMenus, ID_TRAY_GOHEADLESS, MF_BYCOMMAND);
+	}
+
+	// Disable ACPI commands if additions not installed
+	if (!m_Machine.AdditionsActive())
+	{
+		EnableMenuItem(hMenus, ID_TRAY_SHUTDOWN, MF_BYCOMMAND|MF_DISABLED);
+		EnableMenuItem(hMenus, ID_TRAY_SLEEP, MF_BYCOMMAND|MF_DISABLED);
 	}
 
 	m_vecCustomCommands.RemoveAll();
@@ -292,7 +311,7 @@ LRESULT CMainWindow::OnTrayExit(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& 
 	else
 	{
 		log("Saving state before exit\n");
-		m_bQuitOnClosed=true;
+		m_iSaveStateReason=ID_TRAY_EXIT;
 		m_Machine.SaveState();
 	}
 
@@ -350,11 +369,22 @@ void CMainWindow::OnError(const wchar_t* pszMessage)
 
 void CMainWindow::OnStateChange(MachineState newState)
 {
-	if (newState<MachineState_Running && m_bQuitOnClosed)
+	if (newState<MachineState_Running)
 	{
-		log("Machine saved, posting quit message\n");
-		PostQuitMessage(0);
-		m_bQuitOnClosed=false;
+		switch (m_iSaveStateReason)
+		{
+			case ID_TRAY_EXIT:
+				log("Machine saved, posting quit message\n");
+				PostQuitMessage(0);
+				break;
+
+			case ID_TRAY_VBOXGUI:
+			case ID_TRAY_GOHEADLESS:
+				Sleep(200);
+				PostMessage(WM_COMMAND, m_iSaveStateReason);
+				break;
+		}
+		m_iSaveStateReason=0;
 	}
 	else
 	{
@@ -494,6 +524,79 @@ LRESULT CMainWindow::OnCustomCommand(WORD wNotifyCode, WORD wID, HWND hWndCtl, B
 LRESULT CMainWindow::OnDestroy(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
 	m_Machine.Close();
+	return 0;
+}
+
+// ID_TRAY_SHUTDOWN Handler
+LRESULT CMainWindow::OnTrayShutdown(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled)
+{
+	m_Machine.AcpiPowerButton();
+	return 0;
+}
+
+// ID_TRAY_SLEEP Handler
+LRESULT CMainWindow::OnTraySleep(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled)
+{
+	m_Machine.AcpiSleep();
+	return 0;
+}
+
+// ID_TRAY_GOHEADLESS Handler
+LRESULT CMainWindow::OnTrayGoHeadless(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled)
+{
+	if (m_Machine.GetState()>=MachineState_Running)
+	{
+		m_Machine.SaveState();
+		m_iSaveStateReason=ID_TRAY_GOHEADLESS;
+	}
+	else
+	{
+		m_Machine.PowerUp();
+	}
+	return 0;
+}
+
+// ID_TRAY_VBOXGUI Handler
+LRESULT CMainWindow::OnTrayVBoxGui(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled)
+{
+	if (m_Machine.GetState()>=MachineState_Running)
+	{
+		m_Machine.SaveState();
+		m_iSaveStateReason=ID_TRAY_VBOXGUI;
+	}
+	else
+	{
+		m_Machine.OpenGUI();
+	}
+	return 0;
+}
+
+// ID_TRAY_REMOTEDESKTOP Handler
+LRESULT CMainWindow::OnRemoteDesktop(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled)
+{
+	CComPtr<IVRDPServer> spVrdpServer;
+	m_Machine.GetMachine()->get_VRDPServer(&spVrdpServer);
+	if (spVrdpServer)
+	{
+		BOOL bEnabled;
+		spVrdpServer->get_Enabled(&bEnabled);
+		if (!bEnabled)
+		{
+			SlxMessageBox(L"Remote display server is not enabled for this machine, use VirtualBox management console to enable this feature", MB_OK|MB_ICONINFORMATION);
+			return 0;
+		}
+
+		// Get connection settings for VRDP server
+		CComBSTR bstrPorts;	  
+		spVrdpServer->get_Ports(&bstrPorts);
+		CComBSTR bstrNetAddress;
+		spVrdpServer->get_NetAddress(&bstrNetAddress);
+		if (IsEmptyString(bstrNetAddress))
+			bstrNetAddress=L"localhost";
+
+		WinExec(Format(L"mstsc.exe /v:%s:%s", bstrNetAddress, bstrPorts));
+
+	}
 	return 0;
 }
 

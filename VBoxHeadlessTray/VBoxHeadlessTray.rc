@@ -50,8 +50,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 1,1,0,0
- PRODUCTVERSION 1,1,0,0
+ FILEVERSION 1,2,0,0
+ PRODUCTVERSION 1,2,0,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -68,12 +68,12 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "Topten Software"
             VALUE "FileDescription", "VirtualBox Headless Tray"
-            VALUE "FileVersion", "1.1.0.1"
+            VALUE "FileVersion", "1.2.0.1"
             VALUE "InternalName", "VBoxHeadlessTray.exe"
             VALUE "LegalCopyright", "Copyright © 2009-2010 Topten Software.  All Rights Reserved"
             VALUE "OriginalFilename", "VBoxHeadlessTray.exe"
             VALUE "ProductName", "VirtualBox Headless Tray"
-            VALUE "ProductVersion", "1.1.0.1"
+            VALUE "ProductVersion", "1.2.0.1"
         END
     END
     BLOCK "VarFileInfo"
@@ -159,18 +159,29 @@ IDR_CONTEXTMENUS MENU
 BEGIN
     POPUP "&TrayOn"
     BEGIN
-        MENUITEM "Power &Down...",              ID_TRAY_POWEROFF
         MENUITEM "&Save State",                 ID_TRAY_SAVESTATE
-        MENUITEM SEPARATOR
-        MENUITEM "&Reset...",                   ID_TRAY_RESET
         MENUITEM "&Pause",                      ID_TRAY_PAUSE
         MENUITEM "R&esume",                     ID_TRAY_UNPAUSE
+        MENUITEM SEPARATOR
+        MENUITEM "Open Remote &Desktop",        ID_TRAY_REMOTEDESKTOP
+        MENUITEM "Open VirtualBox &GUI",        ID_TRAY_VBOXGUI
+        MENUITEM "&Go Headless",                ID_TRAY_GOHEADLESS
+        MENUITEM SEPARATOR
+        POPUP "AC&PI"
+        BEGIN
+            MENUITEM "S&leep Button",               ID_TRAY_SLEEP
+            MENUITEM "S&hutdown Button...",         ID_TRAY_SHUTDOWN
+        END
+        MENUITEM SEPARATOR
+        MENUITEM "&Reset...",                   ID_TRAY_RESET
+        MENUITEM "Turn &Off...",                ID_TRAY_POWEROFF
         MENUITEM SEPARATOR
         MENUITEM "E&xit",                       ID_TRAY_EXIT
     END
     POPUP "TrayOff"
     BEGIN
         MENUITEM "&Power Up",                   ID_TRAY_POWERON
+        MENUITEM "Open VirtualBox GUI",         ID_TRAY_VBOXGUI
         MENUITEM SEPARATOR
         MENUITEM "E&xit",                       ID_TRAY_EXIT
     END

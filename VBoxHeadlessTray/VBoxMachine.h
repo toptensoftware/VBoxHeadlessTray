@@ -140,15 +140,18 @@ public:
 	HRESULT Open();
 	void Close();
 	bool PowerUp();
+	bool OpenGUI();
 	bool PowerDown();
 	bool SaveState();
 	bool Pause();
 	bool Resume();
 	bool Reset();
 	bool IsOpen() { return m_spVirtualBox!=NULL; }
-
+	bool AcpiPowerButton();
+	bool AcpiSleep();
 	IMachine* GetMachine() { return m_spMachine; };
 	DWORD GetHeadlessPid() { return m_dwHeadlessPid; }
+	bool AdditionsActive();
 
 
 // Operations

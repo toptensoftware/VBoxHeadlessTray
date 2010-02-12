@@ -285,6 +285,13 @@ bool CVBoxMachine::PowerUp()
 	return true;
 }
 
+bool CVBoxMachine::OpenGUI()
+{
+	Exec(L"\"{vboxdir}\\VBoxManage.exe\" startvm \"{machinename}\" --type gui");
+	return true;
+}
+
+
 bool CVBoxMachine::SaveState()
 {
 	// We need to do save state without creating VBoxManage process since, we can't launch a process
@@ -340,3 +347,44 @@ bool CVBoxMachine::Reset()
 	return true;
 }
 
+bool CVBoxMachine::AcpiPowerButton()
+{
+	Exec(L"\"{vboxdir}\\VBoxManage.exe\" controlvm \"{machinename}\" acpipowerbutton");
+	return true;
+}
+
+bool CVBoxMachine::AcpiSleep()
+{
+	Exec(L"\"{vboxdir}\\VBoxManage.exe\" controlvm \"{machinename}\" acpisleepbutton");
+	return true;
+}
+
+// Check if machine has additions installed
+bool CVBoxMachine::AdditionsActive()
+{
+	if (!m_spMachine)
+		return false;
+
+	CComPtr<ISession> spSession;
+	HRESULT hr=spSession.CoCreateInstance(__uuidof(Session));
+	if (FAILED(hr))
+		return false;
+
+	// Open existing session
+	if (FAILED(m_spVirtualBox->OpenExistingSession(spSession, m_bstrMachineID)))
+		return false;
+
+	CComPtr<IConsole> spConsole;
+	if (FAILED(spSession->get_Console(&spConsole)))
+		return false;
+
+	CComPtr<IGuest> spGuest;
+	if (FAILED(spConsole->get_Guest(&spGuest)))
+		return false;
+
+	BOOL bRetv;
+	if (FAILED(spGuest->get_AdditionsActive(&bRetv)))
+		return false;
+
+	return !!bRetv;
+}

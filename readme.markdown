@@ -13,11 +13,13 @@ To use
 
 2. Extract the zip file to a suitable directory
 
-3. Run the correct version (x64/Win32) for your platform. (double click in windows explorer)
+3. Right click on each of the extracted files, select properties and if present click the "Unblock" button.  Depending how you extracted the zip file, this may or may not be present/necessary.  (This removes the warning/UAC prompt when running the program).
+ 
+4. Run the correct version (x64/Win32) for your platform. (double click in windows explorer).
 
-4. Select a machine from the displayed list.  VBoxHeadlessTray will powerup the machine.
+5. Select a machine from the displayed list.  VBoxHeadlessTray will powerup the machine.
 
-5. Right click the tray icon to start/stop/save etc...
+6. Right click the tray icon to start/stop/save etc...
 
 If a VBoxHeadlessTray machine is running when Windows is shutdown, it will automatically 
 save the machine's state and on Windows restarting, VBoxHeadlessTray will restart itself 
@@ -25,6 +27,17 @@ automatically and resume the VM.
 
 To prevent a machine starting at windows logon, exit VBoxHeadlessTray before shutting 
 down windows, or use the -np option.
+
+### Version 1.1 ### 
+
+* Initial version, basic functionality and custom context menus
+
+### Version 1.2 ###
+
+* Added ACPI commands for power button and sleep button (requires guest additions to be installed in the guest OS)
+* Added a new command to launch Remote Desktop for the hosted machine
+* Added two new commands "Open VirtualBox GUI" and "Go Headless" that switch between the headless hosting of the machine and the main VirtualBox GUI.  Note the machine needs to be saved and restored to perform this switch.
+* Reorganised the context menu a bit.
 
 
 CommandLine Arguments
@@ -35,7 +48,6 @@ Usage: VBoxHeadlessTray [-?|-h] [-np] <machinename>
 * -np: don't power on the machine
 * -h:  show help
 
-
 Requirements
 ------------
 
@@ -44,7 +56,6 @@ and all other functionality is still supplied by Virtual Box.  VBoxHeadlessTray 
 a simple front end that hosts VirtualBox runtime.
 
 Testing on Windows XP, Windows Vista and Windows 7.  
-
 
 
 Custom Menu Commands
