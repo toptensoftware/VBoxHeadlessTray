@@ -16,17 +16,13 @@ Common commands are readily available from the context menu:
 To use
 ------
 
-1. Download [VBoxHeadlessTray.zip](http://www.toptensoftware.com/downloads/VBoxHeadlessTray.zip)
+1. Download and Install [VBoxHeadlessTraySetup.exe](http://www.toptensoftware.com/downloads/VBoxHeadlessTray.exe)
 
-2. Extract the zip file to a suitable directory
+2. From Start menu -> Programs run VBoxHeadlessTray
 
-3. Right click on each of the extracted files, select properties and if present click the "Unblock" button.  Depending how you extracted the zip file, this may or may not be present/necessary.  (This removes the warning/UAC prompt when running the program).
- 
-4. Run the correct version (x64/Win32) for your platform. (double click in windows explorer).
+3. Select a machine from the displayed list.  VBoxHeadlessTray will powerup the machine.
 
-5. Select a machine from the displayed list.  VBoxHeadlessTray will powerup the machine.
-
-6. Right click the tray icon to start/stop/save etc...
+4. Right click the tray icon to start/stop/save etc...
 
 If a VBoxHeadlessTray machine is running when Windows is shutdown, it will automatically 
 save the machine's state and on Windows restarting, VBoxHeadlessTray will restart itself 
@@ -115,6 +111,24 @@ Expected folder structure is:
       \SimpleLib
       \VBoxHeadlessTray
 
+To build setup program:
+
+  1. Build both x64 and Win32 Release configs
+  
+  2. Download and install [NSIS](http://nsis.sourceforge.net/Download)
+  
+  3. Right click on the VBoxHeadlessTraySetup.nsi file in Visual Studio project and select properties
+  
+  4. Set Excluded from Build to No
+  
+  5. OK Properties
+  
+  6. Right click .nsi file again and choose Compile.
+  
+  7. Set the .nsi file properties back to Excluded from Build.
+  
+This manual building of the setup is due to the fact that we need both x64 and Win32 exe's for the setup program and Visual Studio doesn't provide a way to do this easily.
+  
 
 Known Issues
 ------------
