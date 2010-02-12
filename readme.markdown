@@ -16,7 +16,7 @@ Common commands are readily available from the context menu:
 To use
 ------
 
-1. Download and Install [VBoxHeadlessTraySetup.exe](http://www.toptensoftware.com/downloads/VBoxHeadlessTray.exe)
+1. Download and Install [VBoxHeadlessTraySetup.exe](http://www.toptensoftware.com/downloads/VBoxHeadlessTraySetup.exe)
 
 2. From Start menu -> Programs run VBoxHeadlessTray
 
