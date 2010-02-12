@@ -35,11 +35,11 @@ automatically and resume the VM.
 To prevent a machine starting at windows logon, exit VBoxHeadlessTray before shutting 
 down windows, or use the -np option.
 
-### Version 1.1 ### 
+### Version 1.1
 
 * Initial version, basic functionality and custom context menus
 
-### Version 1.2 ###
+### Version 1.2
 
 * Added ACPI commands for power button and sleep button (requires guest additions to be installed in the guest OS)
 * Added a new command to launch Remote Desktop for the hosted machine
