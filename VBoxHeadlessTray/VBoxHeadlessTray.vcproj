@@ -327,7 +327,7 @@
 			OutputDirectory="$(PlatformName)\$(ConfigurationName)"
 			IntermediateDirectory="$(PlatformName)\$(ConfigurationName)"
 			ConfigurationType="1"
-			UseOfATL="2"
+			UseOfATL="0"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			CharacterSet="1"
 			>
@@ -628,7 +628,6 @@
 			</FileConfiguration>
 			<FileConfiguration
 				Name="Release|x64"
-				ExcludedFromBuild="true"
 				>
 				<Tool
 					Name="BuildNSIS"
