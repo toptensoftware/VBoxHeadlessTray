@@ -2,9 +2,9 @@
 
 !define prodname "VBoxHeadlessTray"
 !define coname "Topten Software"
-!define outfile ".\VBoxHeadlessTraySetup.exe"
+!define outfile ".\VBoxHeadlessTray32Setup.exe"
 !define licencefile "VBoxHeadless_License.txt"
-!define appexe "SnapShot.exe"
+!define appexe "VBoxHeadlessTray.exe"
 !define produrl "http://www.toptensoftware.com/VBoxHeadlessTray"
 
 ;--------------------------------

@@ -228,9 +228,9 @@ protected:
             /* [in] */ BSTR aMachineId,
             /* [in] */ BSTR aSnapshotId) { return E_NOTIMPL; };
         
-        virtual HRESULT STDMETHODCALLTYPE OnSnapshotDiscarded( 
+        virtual HRESULT STDMETHODCALLTYPE OnSnapshotDeleted( 
             /* [in] */ BSTR aMachineId,
-            /* [in] */ BSTR aSnapshotId) { return E_NOTIMPL; };
+			/* [in] */ BSTR aSnapshotId) { return E_NOTIMPL; };
         
         virtual HRESULT STDMETHODCALLTYPE OnSnapshotChange( 
             /* [in] */ BSTR aMachineId,

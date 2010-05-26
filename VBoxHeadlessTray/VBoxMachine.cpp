@@ -41,6 +41,8 @@ const wchar_t* GetMachineStateDescription(MachineState state)
 		L"Restoring",
 		L"Teleporting Paused VM",
 		L"Teleporting In",
+		L"Deleting Snapshot Online",
+		L"Deleting Snapshot Paused",
 		L"Restoring Snapshot",
 		L"Deleting Snapshot",
 		L"Setting Up",
@@ -234,7 +236,7 @@ HRESULT CVBoxMachine::Exec(const wchar_t* pszCommandLine, DWORD* ppid, HANDLE* p
 {
 	// Work out path to vbox
 	CUniString strVBoxPath;
-	GetSpecialFolderLocation(CSIDL_PROGRAM_FILES, L"Sun\\VirtualBox", false, strVBoxPath);
+	GetSpecialFolderLocation(CSIDL_PROGRAM_FILES, L"Oracle\\VirtualBox", false, strVBoxPath);
 
 	CUniString str=StringReplace(pszCommandLine, L"{vboxdir}", strVBoxPath, true);
 	str=StringReplace(str, L"{machinename}", m_strMachineName, true);

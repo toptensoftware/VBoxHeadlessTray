@@ -13,10 +13,16 @@ Common commands are readily available from the context menu:
 ![TrayMenu](http://www.toptensoftware.com/VBoxHeadlessTray/tray2.png)
 	
 	
+Download Links
+--------------
+
+* [VBoxHeadlessTray32Setup.exe](http://www.toptensoftware.com/downloads/VBoxHeadlessTray32Setup.exe) - for VirtualBox 3.2
+* [VBoxHeadlessTraySetup.exe](http://www.toptensoftware.com/downloads/VBoxHeadlessTraySetup.exe) - for earlier versions of VirtualBox
+	
 To use
 ------
 
-1. Download and Install [VBoxHeadlessTraySetup.exe](http://www.toptensoftware.com/downloads/VBoxHeadlessTraySetup.exe)
+1. Download and Install 
 
 2. From Start menu -> Programs run VBoxHeadlessTray
 
@@ -42,6 +48,11 @@ down windows, or use the -np option.
 * Added two new commands "Open VirtualBox GUI" and "Go Headless" that switch between the headless hosting of the machine and the main VirtualBox GUI.  Note the machine needs to be saved and restored to perform this switch.
 * Reorganised the context menu a bit.
 
+### Version 3.2
+
+* Updated to work with VirtualBox 3.2
+* Changed version number to be in-sync with VirtualBox
+
 
 CommandLine Arguments
 ---------------------
@@ -54,9 +65,10 @@ Usage: VBoxHeadlessTray [-?|-h] [-np] <machinename>
 Requirements
 ------------
 
-Requires VirtualBox 3.1.2 to be installed.  Machine execution, machine management 
-and all other functionality is still supplied by Virtual Box.  VBoxHeadlessTray is 
-a simple front end that hosts VirtualBox runtime.
+VBoxHeadlessTray 3.2 requires VirtualBox 3.2 to be installed.
+VBoxHeadlessTray 1.2 requires VirtualBox 3.1.2 to be installed.  
+
+Machine execution, machine management and all other functionality is still supplied by Virtual Box.  VBoxHeadlessTray is a simple front end that hosts VirtualBox runtime.
 
 Testing on Windows XP, Windows Vista and Windows 7.  
 
@@ -107,7 +119,8 @@ Expected folder structure is:
     \YourProjectsFolder
       \SDKs
         \VirtualBox
-          \sdk
+		  \3.2
+		    \sdk
       \SimpleLib
       \VBoxHeadlessTray
 
