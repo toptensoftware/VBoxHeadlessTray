@@ -234,9 +234,19 @@ void CVBoxMachine::OnMachineStateChange(const wchar_t* pszMachineID, MachineStat
 
 HRESULT CVBoxMachine::Exec(const wchar_t* pszCommandLine, DWORD* ppid, HANDLE* phProcess)
 {
-	// Work out path to vbox
+	// Get from the InstallDir registry key
 	CUniString strVBoxPath;
-	GetSpecialFolderLocation(CSIDL_PROGRAM_FILES, L"Oracle\\VirtualBox", false, strVBoxPath);
+	RegGetString(HKEY_LOCAL_MACHINE, L"SOFTWARE\\Oracle\\VirtualBox", L"InstallDir", strVBoxPath);
+
+	// If that fails, assume program files...
+	if (strVBoxPath.IsEmpty())
+	{
+		// Work out path to vbox
+		GetSpecialFolderLocation(CSIDL_PROGRAM_FILES, L"Oracle\\VirtualBox", false, strVBoxPath);
+	}
+
+	// Remove trailing backslash
+	RemoveTrailingBackslash(strVBoxPath.GetBuffer());
 
 	CUniString str=StringReplace(pszCommandLine, L"{vboxdir}", strVBoxPath, true);
 	str=StringReplace(str, L"{machinename}", m_strMachineName, true);
