@@ -48,10 +48,15 @@ down windows, or use the -np option.
 * Added two new commands "Open VirtualBox GUI" and "Go Headless" that switch between the headless hosting of the machine and the main VirtualBox GUI.  Note the machine needs to be saved and restored to perform this switch.
 * Reorganised the context menu a bit.
 
-### Version 3.2
+### Version 3.2.0.1
 
 * Updated to work with VirtualBox 3.2
 * Changed version number to be in-sync with VirtualBox
+
+### Version 3.2.0.2
+
+* Fix to correctly locate VirtualBox when not installed in default location (uses HKLM\Software\Oracle\InstallDir)
+* Fix to not turn on VRDP when launching headless process. (uses VBoxHeadless.exe --vrdp config)
 
 
 CommandLine Arguments
