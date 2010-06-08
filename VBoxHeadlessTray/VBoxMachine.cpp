@@ -293,7 +293,7 @@ bool CVBoxMachine::PowerUp()
 		return true;
 
 	ASSERT(m_hHeadlessProcess==NULL);
-	Exec(L"\"{vboxdir}\\VBoxHeadless.exe\" --startvm \"{machinename}\"", &m_dwHeadlessPid, &m_hHeadlessProcess);
+	Exec(L"\"{vboxdir}\\VBoxHeadless.exe\" --vrdp config --startvm \"{machinename}\"", &m_dwHeadlessPid, &m_hHeadlessProcess);
 	return true;
 }
 
