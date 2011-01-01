@@ -68,12 +68,12 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "Topten Software"
             VALUE "FileDescription", "VirtualBox Headless Tray"
-            VALUE "FileVersion", "3.2.0.2"
+            VALUE "FileVersion", "4.0.0.0"
             VALUE "InternalName", "VBoxHeadlessTray.exe"
-            VALUE "LegalCopyright", "Copyright © 2009-2010 Topten Software.  All Rights Reserved"
+            VALUE "LegalCopyright", "Copyright © 2009-2011 Topten Software.  All Rights Reserved"
             VALUE "OriginalFilename", "VBoxHeadlessTray.exe"
             VALUE "ProductName", "VirtualBox Headless Tray"
-            VALUE "ProductVersion", "3.2.0.2"
+            VALUE "ProductVersion", "4.0.0.0"
         END
     END
     BLOCK "VarFileInfo"

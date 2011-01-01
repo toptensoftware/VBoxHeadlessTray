@@ -41,6 +41,7 @@ const wchar_t* GetMachineStateDescription(MachineState state)
 		L"Restoring",
 		L"Teleporting Paused VM",
 		L"Teleporting In",
+		L"Fault Tolerant Syncing",
 		L"Deleting Snapshot Online",
 		L"Deleting Snapshot Paused",
 		L"Restoring Snapshot",
@@ -161,7 +162,24 @@ HRESULT CVBoxMachine::Open()
 
 	// Connect listsner for IVirtualBoxCallback
 	log("Registering virtualbox callback\n");
-	m_spVirtualBox->RegisterCallback(&m_VirtualBoxEvents);
+	CComPtr<IEventSource> spEventSource;
+	m_spVirtualBox->get_EventSource(&spEventSource);
+
+
+	SAFEARRAYBOUND bound;
+	bound.lLbound=0;
+	bound.cElements=1;
+	SAFEARRAY* interesting = SafeArrayCreate(VT_I4, 1, &bound);
+	int* pinteresting;
+	SafeArrayAccessData(interesting, (void**)&pinteresting);
+	pinteresting[0]=VBoxEventType_OnMachineStateChanged;
+	SafeArrayUnaccessData(interesting);
+
+
+	spEventSource->RegisterListener(&m_EventListener, &interesting, TRUE);
+
+	SafeArrayDestroy(interesting);
+
 	m_bCallbackRegistered=true;
 
 	m_spMachine->get_State(&m_State);
@@ -176,7 +194,9 @@ void CVBoxMachine::Close()
 	{
 		// Connect listsner for IVirtualBoxCallback
 		log("Unregistering virtualbox callback\n");
-		m_spVirtualBox->UnregisterCallback(&m_VirtualBoxEvents);
+		CComPtr<IEventSource> spEventSource;
+		m_spVirtualBox->get_EventSource(&spEventSource);
+		spEventSource->UnregisterListener(&m_EventListener);
 		m_bCallbackRegistered=false;
 	}
 
@@ -205,12 +225,10 @@ bool CVBoxMachine::SetError(const wchar_t* psz)
 	return false;
 }
 
-void CVBoxMachine::OnMachineStateChange(const wchar_t* pszMachineID, MachineState State)
+void CVBoxMachine::OnMachineStateChange(IMachineStateChangedEvent* e)
 {
-	if (!IsEqualString(pszMachineID, m_bstrMachineID))
-		return;
-
-	m_State=State;
+	// Get new state
+	e->get_State(&m_State);
 
 	switch (m_State)
 	{
@@ -227,7 +245,7 @@ void CVBoxMachine::OnMachineStateChange(const wchar_t* pszMachineID, MachineStat
 
 	if (m_pEvents)
 	{
-		m_pEvents->OnStateChange(State);
+		m_pEvents->OnStateChange(m_State);
 	}
 }
 
@@ -320,7 +338,8 @@ bool CVBoxMachine::SaveState()
 		}
 
 		// Open existing session
-		if (SUCCEEDED(m_spVirtualBox->OpenExistingSession(spSession, m_bstrMachineID)))
+		if (SUCCEEDED(m_spMachine->LockMachine(spSession, LockType_Shared)))
+		//if (SUCCEEDED(m_spVirtualBox->OpenExistingSession(spSession, m_bstrMachineID)))
 		{
 			CComPtr<IConsole> spConsole;
 			if (SUCCEEDED(spSession->get_Console(&spConsole)))
@@ -328,6 +347,8 @@ bool CVBoxMachine::SaveState()
 				CComPtr<IProgress> spProgress;
 				spConsole->SaveState(&spProgress);
 			}
+
+			spSession->UnlockMachine();
 		}
 
 	}
@@ -383,20 +404,28 @@ bool CVBoxMachine::AdditionsActive()
 		return false;
 
 	// Open existing session
-	if (FAILED(m_spVirtualBox->OpenExistingSession(spSession, m_bstrMachineID)))
+	if (FAILED(m_spMachine->LockMachine(spSession, LockType_Shared)))
+	//if (FAILED(m_spVirtualBox->OpenExistingSession(spSession, m_bstrMachineID)))
 		return false;
 
 	CComPtr<IConsole> spConsole;
 	if (FAILED(spSession->get_Console(&spConsole)))
+	{
+		spSession->UnlockMachine();
 		return false;
+	}
 
 	CComPtr<IGuest> spGuest;
 	if (FAILED(spConsole->get_Guest(&spGuest)))
+	{
+		spSession->UnlockMachine();
 		return false;
+	}
 
-	BOOL bRetv;
-	if (FAILED(spGuest->get_AdditionsActive(&bRetv)))
-		return false;
+	CComBSTR bstrAdditionsVersion;
+	spGuest->get_AdditionsVersion(&bstrAdditionsVersion);
 
-	return !!bRetv;
+	spSession->UnlockMachine();
+
+	return !IsEmptyString(bstrAdditionsVersion);
 }

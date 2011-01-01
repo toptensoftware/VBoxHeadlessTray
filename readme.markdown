@@ -16,7 +16,8 @@ Common commands are readily available from the context menu:
 Download Links
 --------------
 
-* [VBoxHeadlessTray32Setup.exe](http://www.toptensoftware.com/downloads/VBoxHeadlessTray32Setup.exe) - for VirtualBox 3.2
+* [VBoxHeadlessTray40Setup.exe](http://www.toptensoftware.com/downloads/VBoxHeadlessTray40Setup.exe) - for VirtualBox 4.x
+* [VBoxHeadlessTray32Setup.exe](http://www.toptensoftware.com/downloads/VBoxHeadlessTray32Setup.exe) - for VirtualBox 3.x
 * [VBoxHeadlessTraySetup.exe](http://www.toptensoftware.com/downloads/VBoxHeadlessTraySetup.exe) - for earlier versions of VirtualBox
 	
 To use
@@ -123,9 +124,8 @@ Expected folder structure is:
 
     \YourProjectsFolder
       \SDKs
-        \VirtualBox
-		  \3.2
-		    \sdk
+        \VirtualBox4
+    	 \sdk
       \SimpleLib
       \VBoxHeadlessTray
 

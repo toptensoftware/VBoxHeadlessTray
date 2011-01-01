@@ -171,22 +171,23 @@ protected:
 	HANDLE					m_hHeadlessProcess;
 
 	bool SetError(const wchar_t* psz);
-	void OnMachineStateChange(const wchar_t* pszMachineID, MachineState State);
+	void OnMachineStateChange(IMachineStateChangedEvent* e);
 	HRESULT Exec(const wchar_t* pszCommandLine, DWORD* ppid=NULL, HANDLE* phProcess=NULL);
 
 // Operations
 
-	class CVirtualBoxEvents : 
+	class CEventListener: 
 		public CComObjectRootEx<CComSingleThreadModel>,
-		public IDispatchImpl<IVirtualBoxCallback, &__uuidof(IVirtualBoxCallback), &__uuidof(LibVirtualBox), kTypeLibraryMajorVersion, kTypeLibraryMinorVersion>
+		public IDispatchImpl<IEventListener, &__uuidof(IEventListener), &__uuidof(LibVirtualBox), kTypeLibraryMajorVersion, kTypeLibraryMinorVersion>
 	{
 	public:
-		BEGIN_COM_MAP(CVirtualBoxEvents)
+		BEGIN_COM_MAP(CEventListener)
 			COM_INTERFACE_ENTRY(IDispatch)
-			COM_INTERFACE_ENTRY(IVirtualBoxCallback)
+			COM_INTERFACE_ENTRY(IEventListener)
 		END_COM_MAP()
 
 
+#if 0
         virtual HRESULT STDMETHODCALLTYPE OnMachineStateChange( 
             /* [in] */ BSTR aMachineId,
             /* [in] */ MachineState aState) 
@@ -241,10 +242,29 @@ protected:
             /* [in] */ BSTR aName,
             /* [in] */ BSTR aValue,
             /* [in] */ BSTR aFlags) { return E_NOTIMPL; };
+#endif
+
+        virtual HRESULT STDMETHODCALLTYPE HandleEvent( 
+            /* [in] */ IEvent *aEvent)
+		{
+			CVBoxMachine* pThis=OUTERCLASS(CVBoxMachine, m_EventListener);
+
+			VBoxEventType type;
+			aEvent->get_Type(&type);
+			switch (type)
+			{
+				case VBoxEventType_OnMachineStateChanged:
+					pThis->OnMachineStateChange(CComQIPtr<IMachineStateChangedEvent>(aEvent));
+					break;
+			}
+
+			return S_OK;
+		}
+
 	};
 
 
-	CComObjectNoRef<CVirtualBoxEvents>	m_VirtualBoxEvents;
+	CComObjectNoRef<CEventListener>	m_EventListener;
 
 	HRESULT StartHeadlessProcess();
 

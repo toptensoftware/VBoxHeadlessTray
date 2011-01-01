@@ -244,7 +244,7 @@ LRESULT CMainWindow::OnNotifyRButtonUp(UINT uMsg, WPARAM wParam, LPARAM lParam, 
 			for (int i=0; i<vecCommandNames.GetSize(); i++)
 			{
 				CComBSTR bstrMenuText;
-				ULONG64 temp;
+				LONG64 temp;
 				CComBSTR bstrTemp;
 				spMachine->GetGuestProperty(
 					CComBSTR(Format(L"VBoxHeadlessTray\\ContextMenus\\%s\\menutext", vecCommandNames[i])),
@@ -400,13 +400,13 @@ LRESULT CMainWindow::OnOpenRemoteDesktopConnection(WORD wNotifyCode, WORD wID, H
 	if (m_Machine.GetState()!=MachineState_Running)
 		return 0;
 
-	CComPtr<IVRDPServer> spVRDPServer;
-	m_Machine.GetMachine()->get_VRDPServer(&spVRDPServer);
-	if (!spVRDPServer)
+	CComPtr<IVRDPServer> spVrdeServer;
+	m_Machine.GetMachine()->get_VRDPServer(&spVrdeServer);
+	if (!spVrdeServer)
 		return 0;
 
 	BOOL bEnabled;
-	spVRDPServer->get_Enabled(&bEnabled);
+	spVrdeServer->get_Enabled(&bEnabled);
 	if (!bEnabled)
 	{
 		SlxMessageBox(L"Remote desktop is not enabled on this virtual machine", MB_OK|MB_ICONINFORMATION);
@@ -415,9 +415,9 @@ LRESULT CMainWindow::OnOpenRemoteDesktopConnection(WORD wNotifyCode, WORD wID, H
 
 	// Get net address and port
 	CComBSTR bstrNetAddress;
-	spVRDPServer->get_NetAddress(&bstrNetAddress);
+	spVrdeServer->get_NetAddress(&bstrNetAddress);
 	ULONG lPort;
-	spVRDPServer->get_Port(&lPort);
+	spVrdeServer->get_Port(&lPort);
 
 	if (bstrNetAddress.Length()==0)
 		bstrNetAddress=L"localhost";
@@ -574,12 +574,12 @@ LRESULT CMainWindow::OnTrayVBoxGui(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOO
 // ID_TRAY_REMOTEDESKTOP Handler
 LRESULT CMainWindow::OnRemoteDesktop(WORD wNotifyCode, WORD wID, HWND hWndCtl, BOOL& bHandled)
 {
-	CComPtr<IVRDPServer> spVrdpServer;
-	m_Machine.GetMachine()->get_VRDPServer(&spVrdpServer);
-	if (spVrdpServer)
+	CComPtr<IVRDEServer> spVrdeServer;
+	m_Machine.GetMachine()->get_VRDEServer(&spVrdeServer);
+	if (spVrdeServer)
 	{
 		BOOL bEnabled;
-		spVrdpServer->get_Enabled(&bEnabled);
+		spVrdeServer->get_Enabled(&bEnabled);
 		if (!bEnabled)
 		{
 			SlxMessageBox(L"Remote display server is not enabled for this machine, use VirtualBox management console to enable this feature", MB_OK|MB_ICONINFORMATION);
@@ -587,15 +587,15 @@ LRESULT CMainWindow::OnRemoteDesktop(WORD wNotifyCode, WORD wID, HWND hWndCtl, B
 		}
 
 		// Get connection settings for VRDP server
-		CComBSTR bstrPorts;	  
-		spVrdpServer->get_Ports(&bstrPorts);
+		CComBSTR bstrPorts;
+		spVrdeServer->GetVRDEProperty(CComBSTR(L"TCP/Ports"), &bstrPorts);
 		CComBSTR bstrNetAddress;
-		spVrdpServer->get_NetAddress(&bstrNetAddress);
+		spVrdeServer->GetVRDEProperty(CComBSTR(L"TCP/Address"), &bstrNetAddress);
+
 		if (IsEmptyString(bstrNetAddress))
 			bstrNetAddress=L"localhost";
 
 		WinExec(Format(L"mstsc.exe /v:%s:%s", bstrNetAddress, bstrPorts));
-
 	}
 	return 0;
 }
