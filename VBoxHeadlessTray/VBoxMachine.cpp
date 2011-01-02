@@ -227,6 +227,11 @@ bool CVBoxMachine::SetError(const wchar_t* psz)
 
 void CVBoxMachine::OnMachineStateChange(IMachineStateChangedEvent* e)
 {
+	CComBSTR bstrMachineID;
+	e->get_MachineId(&bstrMachineID);
+	if (!IsEqualStringI(bstrMachineID, m_bstrMachineID))
+		return;
+
 	// Get new state
 	e->get_State(&m_State);
 

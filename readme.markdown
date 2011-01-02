@@ -59,10 +59,16 @@ down windows, or use the -np option.
 * Fix to correctly locate VirtualBox when not installed in default location (uses HKLM\Software\Oracle\InstallDir)
 * Fix to not turn on VRDP when launching headless process. (uses VBoxHeadless.exe --vrdp config)
 
-### Version 4.0
+### Version 4.0.0.0
 
 * Updated to work with VirtualBox 4.0
 * Fixes Resume command not working
+
+
+### Version 4.0.0.1
+
+* Fixed icon tray state reflecting state of incorrect VM.
+
 
 CommandLine Arguments
 ---------------------
