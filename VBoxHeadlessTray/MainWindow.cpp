@@ -386,10 +386,8 @@ void CMainWindow::OnStateChange(MachineState newState)
 		}
 		m_iSaveStateReason=0;
 	}
-	else
-	{
-		UpdateTrayIcon(true, newState);
-	}
+
+	UpdateTrayIcon(true, newState);
 }
 
 // ID_TRAY_OPENREMOTEDESKTOPCONNECTION Handler
@@ -431,6 +429,9 @@ LRESULT CMainWindow::OnOpenRemoteDesktopConnection(WORD wNotifyCode, WORD wID, H
 // WM_TIMER Handler
 LRESULT CMainWindow::OnTimer(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
+	// Poll the machine state
+	m_Machine.PollMachineState();
+
 	m_iAnimationFrame++;
 	if (m_iAnimationFrame>2)
 		m_iAnimationFrame=0;

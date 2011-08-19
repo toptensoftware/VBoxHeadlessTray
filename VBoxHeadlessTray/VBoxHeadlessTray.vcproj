@@ -612,7 +612,6 @@
 			</FileConfiguration>
 			<FileConfiguration
 				Name="Debug|x64"
-				ExcludedFromBuild="true"
 				>
 				<Tool
 					Name="BuildNSIS"
@@ -628,6 +627,7 @@
 			</FileConfiguration>
 			<FileConfiguration
 				Name="Release|x64"
+				ExcludedFromBuild="true"
 				>
 				<Tool
 					Name="BuildNSIS"

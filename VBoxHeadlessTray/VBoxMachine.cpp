@@ -96,6 +96,7 @@ CVBoxMachine::CVBoxMachine()
 	m_bCallbackRegistered=false;
 	m_dwHeadlessPid=0;
 	m_hHeadlessProcess=NULL;
+	m_hPollTimer = NULL;
 }
 
 // Destructor
@@ -160,7 +161,7 @@ HRESULT CVBoxMachine::Open()
 	m_spMachine->get_LogFolder(&bstrLogFolder);
 	log_open(w2a(SimplePathAppend(bstrLogFolder, L"VBoxHeadlessTray.log")));
 
-	// Connect listsner for IVirtualBoxCallback
+	// Connect listener for IVirtualBoxCallback
 	log("Registering virtualbox callback\n");
 	CComPtr<IEventSource> spEventSource;
 	m_spVirtualBox->get_EventSource(&spEventSource);
@@ -174,11 +175,14 @@ HRESULT CVBoxMachine::Open()
 	SafeArrayAccessData(interesting, (void**)&pinteresting);
 	pinteresting[0]=VBoxEventType_OnMachineStateChanged;
 	SafeArrayUnaccessData(interesting);
-
-
-	spEventSource->RegisterListener(&m_EventListener, &interesting, TRUE);
-
+	spEventSource->RegisterListener(&m_EventListener, interesting, TRUE);
 	SafeArrayDestroy(interesting);
+
+	// Since VBox 4.1 seems to fail to send machine state events, lets just poll the machine every 5 seconds
+	// If we get a real machine state event, we'll kill this, assuming it's working
+	// The VBoxHeadlessTray machine window also calls OnMachineStateChanged from it's tray icon
+	// update timer.... so when things are transitioning the state should update fairly quickly.
+	m_hPollTimer = SetCallbackTimer(1000, 0, OnPollMachineState, (LPARAM)this);
 
 	m_bCallbackRegistered=true;
 
@@ -198,6 +202,12 @@ void CVBoxMachine::Close()
 		m_spVirtualBox->get_EventSource(&spEventSource);
 		spEventSource->UnregisterListener(&m_EventListener);
 		m_bCallbackRegistered=false;
+	}
+
+	if (m_hPollTimer!=NULL)
+	{
+		KillCallbackTimer(m_hPollTimer);
+		m_hPollTimer!=NULL;
 	}
 
 	log("Releasing Machine\n");
@@ -227,13 +237,38 @@ bool CVBoxMachine::SetError(const wchar_t* psz)
 
 void CVBoxMachine::OnMachineStateChange(IMachineStateChangedEvent* e)
 {
-	CComBSTR bstrMachineID;
-	e->get_MachineId(&bstrMachineID);
-	if (!IsEqualStringI(bstrMachineID, m_bstrMachineID))
-		return;
+	if (e!=NULL)
+	{
+		// A real machine state change event!
 
-	// Get new state
-	e->get_State(&m_State);
+		CComBSTR bstrMachineID;
+		e->get_MachineId(&bstrMachineID);
+		if (!IsEqualStringI(bstrMachineID, m_bstrMachineID))
+			return;
+
+		// Get new state
+		e->get_State(&m_State);
+
+		// Since we got an actual event from VirtualBox, let's assume it's working
+		// and kill our poll timer
+		if (m_hPollTimer!=NULL)
+		{
+			KillCallbackTimer(m_hPollTimer);
+		}
+	}
+	else
+	{
+		// Poll mode
+
+		// Get the current state and see if it changed
+		MachineState newState;
+		m_spMachine->get_State(&newState);
+		if (newState == m_State)
+			return;
+
+		// Yep
+		m_State = newState;
+	}
 
 	switch (m_State)
 	{

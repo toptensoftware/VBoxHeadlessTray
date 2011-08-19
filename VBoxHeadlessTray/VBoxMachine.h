@@ -153,6 +153,8 @@ public:
 	DWORD GetHeadlessPid() { return m_dwHeadlessPid; }
 	bool AdditionsActive();
 
+	void PollMachineState() { OnMachineStateChange(NULL); }
+
 
 // Operations
 
@@ -169,10 +171,16 @@ protected:
 	bool					m_bCallbackRegistered;
 	DWORD					m_dwHeadlessPid;
 	HANDLE					m_hHeadlessProcess;
+	HCALLBACKTIMER			m_hPollTimer;
 
 	bool SetError(const wchar_t* psz);
 	void OnMachineStateChange(IMachineStateChangedEvent* e);
 	HRESULT Exec(const wchar_t* pszCommandLine, DWORD* ppid=NULL, HANDLE* phProcess=NULL);
+
+	static void CALLBACK OnPollMachineState(LPARAM lParam)
+	{
+		((CVBoxMachine*)lParam)->OnMachineStateChange(NULL);
+	}
 
 // Operations
 
@@ -186,63 +194,6 @@ protected:
 			COM_INTERFACE_ENTRY(IEventListener)
 		END_COM_MAP()
 
-
-#if 0
-        virtual HRESULT STDMETHODCALLTYPE OnMachineStateChange( 
-            /* [in] */ BSTR aMachineId,
-            /* [in] */ MachineState aState) 
-		{
-			CVBoxMachine* pThis=OUTERCLASS(CVBoxMachine, m_VirtualBoxEvents);
-			pThis->OnMachineStateChange(aMachineId, aState);
-			return E_NOTIMPL; 
-		};
-        
-        virtual HRESULT STDMETHODCALLTYPE OnMachineDataChange( 
-            /* [in] */ BSTR aMachineId) { return E_NOTIMPL; };
-        
-        virtual HRESULT STDMETHODCALLTYPE OnExtraDataCanChange( 
-            /* [in] */ BSTR aMachineId,
-            /* [in] */ BSTR aKey,
-            /* [in] */ BSTR aValue,
-            /* [out] */ BSTR *aError,
-            /* [retval][out] */ BOOL *aAllowChange) { return E_NOTIMPL; };
-        
-        virtual HRESULT STDMETHODCALLTYPE OnExtraDataChange( 
-            /* [in] */ BSTR aMachineId,
-            /* [in] */ BSTR aKey,
-            /* [in] */ BSTR aValue) { return E_NOTIMPL; };
-        
-        virtual HRESULT STDMETHODCALLTYPE OnMediumRegistered( 
-            /* [in] */ BSTR aMediumId,
-            /* [in] */ DeviceType aMediumType,
-            /* [in] */ BOOL aRegistered) { return E_NOTIMPL; };
-        
-        virtual HRESULT STDMETHODCALLTYPE OnMachineRegistered( 
-            /* [in] */ BSTR aMachineId,
-            /* [in] */ BOOL aRegistered) { return E_NOTIMPL; };
-        
-        virtual HRESULT STDMETHODCALLTYPE OnSessionStateChange( 
-            /* [in] */ BSTR aMachineId,
-            /* [in] */ SessionState aState) { return E_NOTIMPL; };
-        
-        virtual HRESULT STDMETHODCALLTYPE OnSnapshotTaken( 
-            /* [in] */ BSTR aMachineId,
-            /* [in] */ BSTR aSnapshotId) { return E_NOTIMPL; };
-        
-        virtual HRESULT STDMETHODCALLTYPE OnSnapshotDeleted( 
-            /* [in] */ BSTR aMachineId,
-			/* [in] */ BSTR aSnapshotId) { return E_NOTIMPL; };
-        
-        virtual HRESULT STDMETHODCALLTYPE OnSnapshotChange( 
-            /* [in] */ BSTR aMachineId,
-            /* [in] */ BSTR aSnapshotId) { return E_NOTIMPL; };
-        
-        virtual HRESULT STDMETHODCALLTYPE OnGuestPropertyChange( 
-            /* [in] */ BSTR aMachineId,
-            /* [in] */ BSTR aName,
-            /* [in] */ BSTR aValue,
-            /* [in] */ BSTR aFlags) { return E_NOTIMPL; };
-#endif
 
         virtual HRESULT STDMETHODCALLTYPE HandleEvent( 
             /* [in] */ IEvent *aEvent)
