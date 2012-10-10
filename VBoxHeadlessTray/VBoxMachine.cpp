@@ -207,7 +207,7 @@ void CVBoxMachine::Close()
 	if (m_hPollTimer!=NULL)
 	{
 		KillCallbackTimer(m_hPollTimer);
-		m_hPollTimer!=NULL;
+		m_hPollTimer=NULL;
 	}
 
 	log("Releasing Machine\n");

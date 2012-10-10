@@ -16,6 +16,7 @@ Common commands are readily available from the context menu:
 Download Links
 --------------
 
+* [VBoxHeadlessTray42Setup.exe](http://www.toptensoftware.com/downloads/VBoxHeadlessTray42Setup.exe) - for VirtualBox 4.2
 * [VBoxHeadlessTray41Setup.exe](http://www.toptensoftware.com/downloads/VBoxHeadlessTray41Setup.exe) - for VirtualBox 4.1
 * [VBoxHeadlessTray40Setup.exe](http://www.toptensoftware.com/downloads/VBoxHeadlessTray40Setup.exe) - for VirtualBox 4.0
 * [VBoxHeadlessTray32Setup.exe](http://www.toptensoftware.com/downloads/VBoxHeadlessTray32Setup.exe) - for VirtualBox 3.x
@@ -75,6 +76,10 @@ down windows, or use the -np option.
 
 * Updated to work with VirtualBox 4.1
 * Due to apparent bugs in VirtualBox itself (not send machine state change notifications), the tray icon may be a little slow to update when starting and stopping the VM through the VirtualBox GUI.
+
+### Version 4.2.0.1
+
+* Updated to work with VirtualBox 4.2
 
 
 

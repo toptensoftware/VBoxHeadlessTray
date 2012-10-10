@@ -611,15 +611,7 @@
 				/>
 			</FileConfiguration>
 			<FileConfiguration
-				Name="Debug|x64"
-				>
-				<Tool
-					Name="BuildNSIS"
-				/>
-			</FileConfiguration>
-			<FileConfiguration
 				Name="Release|Win32"
-				ExcludedFromBuild="true"
 				>
 				<Tool
 					Name="BuildNSIS"
