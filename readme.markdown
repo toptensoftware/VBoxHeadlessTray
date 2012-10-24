@@ -81,6 +81,10 @@ down windows, or use the -np option.
 
 * Updated to work with VirtualBox 4.2
 
+### Version 4.2.0.3
+
+* Fix for a crash on shutdown with some VM's
+
 
 
 

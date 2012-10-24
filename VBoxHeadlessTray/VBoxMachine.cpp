@@ -449,14 +449,14 @@ bool CVBoxMachine::AdditionsActive()
 		return false;
 
 	CComPtr<IConsole> spConsole;
-	if (FAILED(spSession->get_Console(&spConsole)))
+	if (FAILED(spSession->get_Console(&spConsole)) || !spConsole)
 	{
 		spSession->UnlockMachine();
 		return false;
 	}
 
 	CComPtr<IGuest> spGuest;
-	if (FAILED(spConsole->get_Guest(&spGuest)))
+	if (FAILED(spConsole->get_Guest(&spGuest)) || !spGuest)
 	{
 		spSession->UnlockMachine();
 		return false;
