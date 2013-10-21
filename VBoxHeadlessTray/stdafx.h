@@ -64,7 +64,7 @@ using namespace ATL;
 
 
 #include "../../SimpleLib/SimpleLibAtlCom.h"
-#include "../../SDKs/VirtualBox42/sdk/bindings/mscom/include/VirtualBox.h"
+#include "../sdk/bindings/mscom/include/VirtualBox.h"
 
 
 

@@ -175,7 +175,7 @@ HRESULT CVBoxMachine::Open()
 	SafeArrayAccessData(interesting, (void**)&pinteresting);
 	pinteresting[0]=VBoxEventType_OnMachineStateChanged;
 	SafeArrayUnaccessData(interesting);
-	spEventSource->RegisterListener(&m_EventListener, interesting, TRUE);
+	spEventSource->RegisterListener(&m_EventListener, interesting, VARIANT_TRUE);
 	SafeArrayDestroy(interesting);
 
 	// Since VBox 4.1 seems to fail to send machine state events, lets just poll the machine every 5 seconds
