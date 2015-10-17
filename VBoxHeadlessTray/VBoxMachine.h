@@ -150,7 +150,7 @@ public:
 	bool AcpiPowerButton();
 	bool AcpiSleep();
 	IMachine* GetMachine() { return m_spMachine; };
-	DWORD GetHeadlessPid() { return m_dwHeadlessPid; }
+	DWORD GetHeadlessPid();
 	bool AdditionsActive();
 
 	void PollMachineState() { OnMachineStateChange(NULL); }
@@ -169,8 +169,6 @@ protected:
 	IVBoxMachineEvents*		m_pEvents;
 	MachineState			m_State;
 	bool					m_bCallbackRegistered;
-	DWORD					m_dwHeadlessPid;
-	HANDLE					m_hHeadlessProcess;
 	HCALLBACKTIMER			m_hPollTimer;
 
 	bool SetError(const wchar_t* psz);
