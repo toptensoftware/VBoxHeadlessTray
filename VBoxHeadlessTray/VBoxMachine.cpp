@@ -381,11 +381,11 @@ bool CVBoxMachine::SaveState()
 		if (SUCCEEDED(m_spMachine->LockMachine(spSession, LockType_Shared)))
 		//if (SUCCEEDED(m_spVirtualBox->OpenExistingSession(spSession, m_bstrMachineID)))
 		{
-			CComPtr<IConsole> spConsole;
-			if (SUCCEEDED(spSession->get_Console(&spConsole)))
+			CComPtr<IMachine> spMachine;
+			if (SUCCEEDED(spSession->get_Machine(&spMachine)))
 			{
 				CComPtr<IProgress> spProgress;
-				spConsole->SaveState(&spProgress);
+				spMachine->SaveState(&spProgress);
 			}
 
 			spSession->UnlockMachine();
