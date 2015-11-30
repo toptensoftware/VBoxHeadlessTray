@@ -613,9 +613,16 @@ DWORD CVBoxMachine::GetHeadlessPid()
 	if (!m_spMachine || m_State!=MachineState_Running)
 		return 0;
 
+	// Is it headless?
+	CComBSTR bstrName;
+	m_spMachine->get_SessionName(&bstrName);
+	if (!IsEqualStringI(bstrName, L"headless"))
+		return 0;
+
 	unsigned long ulSessionPID;
 
 	m_spMachine->get_SessionPID(&ulSessionPID);
+
 
 	return ulSessionPID;
 }
