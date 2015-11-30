@@ -16,6 +16,7 @@ Common commands are readily available from the context menu:
 Download Links
 --------------
 
+* [VBoxHeadlessTray50Setup.exe](http://www.toptensoftware.com/downloads/VBoxHeadlessTray50Setup.exe) - for VirtualBox 5.0
 * [VBoxHeadlessTray43Setup.exe](http://www.toptensoftware.com/downloads/VBoxHeadlessTray43Setup.exe) - for VirtualBox 4.3
 * [VBoxHeadlessTray42Setup.exe](http://www.toptensoftware.com/downloads/VBoxHeadlessTray42Setup.exe) - for VirtualBox 4.2
 * [VBoxHeadlessTray41Setup.exe](http://www.toptensoftware.com/downloads/VBoxHeadlessTray41Setup.exe) - for VirtualBox 4.1
@@ -86,7 +87,11 @@ down windows, or use the -np option.
 
 * Fix for a crash on shutdown with some VM's
 
+### Version 5.0
 
+* Updated to work with VirtualBox 5
+
+Special thanks to [Andy Hawkins](https://github.com/adhawkins) who did almost all the work on this.  Thanks Man!
 
 
 CommandLine Arguments
