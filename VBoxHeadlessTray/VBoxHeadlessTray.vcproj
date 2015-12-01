@@ -599,33 +599,6 @@
 			RelativePath=".\VBoxHeadless_License.txt"
 			>
 		</File>
-		<File
-			RelativePath=".\VBoxHeadlessTraySetup.nsi"
-			>
-			<FileConfiguration
-				Name="Debug|Win32"
-				ExcludedFromBuild="true"
-				>
-				<Tool
-					Name="BuildNSIS"
-				/>
-			</FileConfiguration>
-			<FileConfiguration
-				Name="Release|Win32"
-				ExcludedFromBuild="true"
-				>
-				<Tool
-					Name="BuildNSIS"
-				/>
-			</FileConfiguration>
-			<FileConfiguration
-				Name="Release|x64"
-				>
-				<Tool
-					Name="BuildNSIS"
-				/>
-			</FileConfiguration>
-		</File>
 	</Files>
 	<Globals>
 		<Global
