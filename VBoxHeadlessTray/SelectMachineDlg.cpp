@@ -48,8 +48,10 @@ HRESULT CSelectMachineDlg::RefreshList()
 	for (int i=0; i<vecMachines.GetSize(); i++)
 	{
 		CComBSTR bstrName;
-		vecMachines[i]->get_Name(&bstrName);
-		cb.AddString(bstrName);
+		if (SUCCEEDED(vecMachines[i]->get_Name(&bstrName)))
+		{
+			cb.AddString(bstrName);
+		}
 	}
 
 	cb.SetCurSel(0);
