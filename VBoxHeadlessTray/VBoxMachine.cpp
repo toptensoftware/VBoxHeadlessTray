@@ -94,8 +94,6 @@ CVBoxMachine::CVBoxMachine()
 	m_pEvents=NULL;
 	m_State=MachineState_Null;
 	m_bCallbackRegistered=false;
-	m_dwHeadlessPid=0;
-	m_hHeadlessProcess=NULL;
 	m_hPollTimer = NULL;
 }
 
@@ -276,9 +274,6 @@ void CVBoxMachine::OnMachineStateChange(IMachineStateChangedEvent* e)
 		case MachineState_Saved:
 		case MachineState_Teleported:
 		case MachineState_Aborted:
-			m_dwHeadlessPid=0;
-			CloseHandle(m_hHeadlessProcess);
-			m_hHeadlessProcess=NULL;
 			break;
 	}
 
@@ -350,15 +345,31 @@ bool CVBoxMachine::PowerUp()
 	if (m_State>=MachineState_Running)
 		return true;
 
-	ASSERT(m_hHeadlessProcess==NULL);
-	Exec(L"\"{vboxdir}\\VBoxHeadless.exe\" --vrdp config --startvm \"{machinename}\"", &m_dwHeadlessPid, &m_hHeadlessProcess);
-	return true;
+	CComPtr<ISession> spSession;
+	HRESULT hr = spSession.CoCreateInstance(__uuidof(Session));
+	if (FAILED(hr))
+	{
+		return SetError(Format(L"Failed to create VirtualBox session object - %s", vboxFormatError(hr)));
+	}
+
+	CComPtr<IProgress> spProgress;
+	return SUCCEEDED(m_spMachine->LaunchVMProcess(spSession, CComBSTR("headless"), CComBSTR(""), &spProgress));
 }
 
 bool CVBoxMachine::OpenGUI()
 {
-	Exec(L"\"{vboxdir}\\VBoxManage.exe\" startvm \"{machinename}\" --type gui");
-	return true;
+	if (m_State >= MachineState_Running)
+		return true;
+
+	CComPtr<ISession> spSession;
+	HRESULT hr = spSession.CoCreateInstance(__uuidof(Session));
+	if (FAILED(hr))
+	{
+		return SetError(Format(L"Failed to create VirtualBox session object - %s", vboxFormatError(hr)));
+	}
+
+	CComPtr<IProgress> spProgress;
+	return SUCCEEDED(m_spMachine->LaunchVMProcess(spSession, CComBSTR("gui"), CComBSTR(""), &spProgress));
 }
 
 
@@ -381,11 +392,11 @@ bool CVBoxMachine::SaveState()
 		if (SUCCEEDED(m_spMachine->LockMachine(spSession, LockType_Shared)))
 		//if (SUCCEEDED(m_spVirtualBox->OpenExistingSession(spSession, m_bstrMachineID)))
 		{
-			CComPtr<IConsole> spConsole;
-			if (SUCCEEDED(spSession->get_Console(&spConsole)))
+			CComPtr<IMachine> spMachine;
+			if (SUCCEEDED(spSession->get_Machine(&spMachine)))
 			{
 				CComPtr<IProgress> spProgress;
-				spConsole->SaveState(&spProgress);
+				spMachine->SaveState(&spProgress);
 			}
 
 			spSession->UnlockMachine();
@@ -398,38 +409,165 @@ bool CVBoxMachine::SaveState()
 
 bool CVBoxMachine::PowerDown()
 {
-	Exec(L"\"{vboxdir}\\VBoxManage.exe\" controlvm \"{machinename}\" poweroff");
-	return true;
+	if (!m_spMachine)
+		return false;
+
+	CComPtr<ISession> spSession;
+	HRESULT hr = spSession.CoCreateInstance(__uuidof(Session));
+	if (FAILED(hr))
+		return false;
+
+	// Open existing session
+	if (FAILED(m_spMachine->LockMachine(spSession, LockType_Shared)))
+		//if (FAILED(m_spVirtualBox->OpenExistingSession(spSession, m_bstrMachineID)))
+		return false;
+
+	CComPtr<IConsole> spConsole;
+	if (FAILED(spSession->get_Console(&spConsole)) || !spConsole)
+	{
+		spSession->UnlockMachine();
+		return false;
+	}
+
+	CComPtr<IProgress> spProgress;
+	hr=spConsole->PowerDown(&spProgress);
+	spSession->UnlockMachine();
+	return SUCCEEDED(hr);
 }
 
 bool CVBoxMachine::Pause()
 {
-	Exec(L"\"{vboxdir}\\VBoxManage.exe\" controlvm \"{machinename}\" pause");
-	return true;
+	if (!m_spMachine)
+		return false;
+
+	CComPtr<ISession> spSession;
+	HRESULT hr = spSession.CoCreateInstance(__uuidof(Session));
+	if (FAILED(hr))
+		return false;
+
+	// Open existing session
+	if (FAILED(m_spMachine->LockMachine(spSession, LockType_Shared)))
+		//if (FAILED(m_spVirtualBox->OpenExistingSession(spSession, m_bstrMachineID)))
+		return false;
+
+	CComPtr<IConsole> spConsole;
+	if (FAILED(spSession->get_Console(&spConsole)) || !spConsole)
+	{
+		spSession->UnlockMachine();
+		return false;
+	}
+
+	hr=spConsole->Pause();
+	spSession->UnlockMachine();
+	return SUCCEEDED(hr);
 }
 
 bool CVBoxMachine::Resume()
 {
-	Exec(L"\"{vboxdir}\\VBoxManage.exe\" controlvm \"{machinename}\" resume");
-	return true;
+	if (!m_spMachine)
+		return false;
+
+	CComPtr<ISession> spSession;
+	HRESULT hr = spSession.CoCreateInstance(__uuidof(Session));
+	if (FAILED(hr))
+		return false;
+
+	// Open existing session
+	if (FAILED(m_spMachine->LockMachine(spSession, LockType_Shared)))
+		//if (FAILED(m_spVirtualBox->OpenExistingSession(spSession, m_bstrMachineID)))
+		return false;
+
+	CComPtr<IConsole> spConsole;
+	if (FAILED(spSession->get_Console(&spConsole)) || !spConsole)
+	{
+		spSession->UnlockMachine();
+		return false;
+	}
+
+	hr=spConsole->Resume();
+	spSession->UnlockMachine();
+	return SUCCEEDED(hr);
 }
 
 bool CVBoxMachine::Reset()
 {
-	Exec(L"\"{vboxdir}\\VBoxManage.exe\" controlvm \"{machinename}\" reset");
-	return true;
+	if (!m_spMachine)
+		return false;
+
+	CComPtr<ISession> spSession;
+	HRESULT hr = spSession.CoCreateInstance(__uuidof(Session));
+	if (FAILED(hr))
+		return false;
+
+	// Open existing session
+	if (FAILED(m_spMachine->LockMachine(spSession, LockType_Shared)))
+		//if (FAILED(m_spVirtualBox->OpenExistingSession(spSession, m_bstrMachineID)))
+		return false;
+
+	CComPtr<IConsole> spConsole;
+	if (FAILED(spSession->get_Console(&spConsole)) || !spConsole)
+	{
+		spSession->UnlockMachine();
+		return false;
+	}
+
+	hr=spConsole->Reset();
+	spSession->UnlockMachine();
+	return SUCCEEDED(hr);
 }
 
 bool CVBoxMachine::AcpiPowerButton()
 {
-	Exec(L"\"{vboxdir}\\VBoxManage.exe\" controlvm \"{machinename}\" acpipowerbutton");
-	return true;
+	if (!m_spMachine)
+		return false;
+
+	CComPtr<ISession> spSession;
+	HRESULT hr = spSession.CoCreateInstance(__uuidof(Session));
+	if (FAILED(hr))
+		return false;
+
+	// Open existing session
+	if (FAILED(m_spMachine->LockMachine(spSession, LockType_Shared)))
+		//if (FAILED(m_spVirtualBox->OpenExistingSession(spSession, m_bstrMachineID)))
+		return false;
+
+	CComPtr<IConsole> spConsole;
+	if (FAILED(spSession->get_Console(&spConsole)) || !spConsole)
+	{
+		spSession->UnlockMachine();
+		return false;
+	}
+
+	hr=spConsole->PowerButton();
+	spSession->UnlockMachine();
+	return SUCCEEDED(hr);
 }
 
 bool CVBoxMachine::AcpiSleep()
 {
-	Exec(L"\"{vboxdir}\\VBoxManage.exe\" controlvm \"{machinename}\" acpisleepbutton");
-	return true;
+	if (!m_spMachine)
+		return false;
+
+	CComPtr<ISession> spSession;
+	HRESULT hr = spSession.CoCreateInstance(__uuidof(Session));
+	if (FAILED(hr))
+		return false;
+
+	// Open existing session
+	if (FAILED(m_spMachine->LockMachine(spSession, LockType_Shared)))
+		//if (FAILED(m_spVirtualBox->OpenExistingSession(spSession, m_bstrMachineID)))
+		return false;
+
+	CComPtr<IConsole> spConsole;
+	if (FAILED(spSession->get_Console(&spConsole)) || !spConsole)
+	{
+		spSession->UnlockMachine();
+		return false;
+	}
+
+	hr = spConsole->SleepButton();
+	spSession->UnlockMachine();
+	return SUCCEEDED(hr);
 }
 
 // Check if machine has additions installed
@@ -468,4 +606,23 @@ bool CVBoxMachine::AdditionsActive()
 	spSession->UnlockMachine();
 
 	return !IsEmptyString(bstrAdditionsVersion);
+}
+
+DWORD CVBoxMachine::GetHeadlessPid()
+{
+	if (!m_spMachine || m_State!=MachineState_Running)
+		return 0;
+
+	// Is it headless?
+	CComBSTR bstrName;
+	m_spMachine->get_SessionName(&bstrName);
+	if (!IsEqualStringI(bstrName, L"headless"))
+		return 0;
+
+	unsigned long ulSessionPID;
+
+	m_spMachine->get_SessionPID(&ulSessionPID);
+
+
+	return ulSessionPID;
 }

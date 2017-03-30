@@ -380,7 +380,7 @@ void CMainWindow::OnStateChange(MachineState newState)
 
 			case ID_TRAY_VBOXGUI:
 			case ID_TRAY_GOHEADLESS:
-				Sleep(200);
+				Sleep(1000);
 				PostMessage(WM_COMMAND, m_iSaveStateReason);
 				break;
 		}
