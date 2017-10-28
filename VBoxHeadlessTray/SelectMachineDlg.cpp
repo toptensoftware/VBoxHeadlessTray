@@ -36,14 +36,30 @@ HRESULT CSelectMachineDlg::RefreshList()
 	ATLControls::CListBox cb(GetDlgItem(IDC_MACHINENAME));
 	cb.ResetContent();
 
-	CComPtr<IVirtualBox> spVirtualBox;
-	RETURNIFFAILED(spVirtualBox.CoCreateInstance(__uuidof(VirtualBox)));
+	HRESULT rc;
 
-	CSafeArray psa;
-	RETURNIFFAILED(spVirtualBox->get_Machines(&psa));
+	CoInitialize(NULL);
+
+	CComPtr<IVirtualBoxClient> virtualBoxClient;
+
+    rc = CoCreateInstance(CLSID_VirtualBoxClient, /* the VirtualBoxClient object */
+                                  NULL,                   /* no aggregation */
+                                  CLSCTX_INPROC_SERVER,   /* the object lives in the current process */
+                                  IID_IVirtualBoxClient,  /* IID of the interface */
+                                  (void**)&virtualBoxClient);
+	RETURNIFFAILED(rc);
+
+	CComPtr<IVirtualBox> spVirtualBox;
+
+    RETURNIFFAILED(virtualBoxClient->get_VirtualBox(&spVirtualBox));
+
+	SAFEARRAY *machinesArray = NULL;
+
+	RETURNIFFAILED(spVirtualBox->get_Machines(&machinesArray));
 
 	CComPtrVector<IMachine*> vecMachines;
-	vecMachines.InitFromSafeArray(psa);
+
+	vecMachines.InitFromSafeArray(machinesArray);
 
 	for (int i=0; i<vecMachines.GetSize(); i++)
 	{

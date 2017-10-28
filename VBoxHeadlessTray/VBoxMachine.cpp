@@ -136,12 +136,29 @@ HRESULT CVBoxMachine::Open()
 	// Create VirtualBox object
 	log("Creating VirtualBox\n");
 	ClearComErrorInfo();
-	HRESULT hr=m_spVirtualBox.CoCreateInstance(__uuidof(VirtualBox));
+ 
+	/* Initialize the COM subsystem. */
+    CoInitialize(NULL);
+    /* Instantiate the VirtualBox root object. */
+    IVirtualBoxClient *virtualBoxClient;
+    HRESULT hr = CoCreateInstance(CLSID_VirtualBoxClient, /* the VirtualBoxClient object */
+                                  NULL,                   /* no aggregation */
+                                  CLSCTX_INPROC_SERVER,   /* the object lives in the current process */
+                                  IID_IVirtualBoxClient,  /* IID of the interface */
+                                  (void**)&virtualBoxClient);
 	if (FAILED(hr))
 	{
 		Close();
-		return SetError(Format(L"Failed to create VirtualBox COM server - %s", vboxFormatError(hr)));
+		return SetError(Format(L"Failed to create VirtualBoxClient COM server - %s", vboxFormatError(hr)));
+	}else{
+		IVirtualBox *virtualBox;
+        hr = virtualBoxClient->get_VirtualBox(&m_spVirtualBox);
+		if (FAILED(hr)){
+			Close();
+			return SetError(Format(L"Failed to create VirtualBox COM server - %s", vboxFormatError(hr)));
+		}
 	}
+
 
 	// Get machine ID
 	log("Finding machine\n");
