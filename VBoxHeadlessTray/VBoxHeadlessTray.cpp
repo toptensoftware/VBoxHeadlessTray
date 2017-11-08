@@ -66,7 +66,7 @@ void ShowHelp()
 extern "C" int WINAPI _tWinMain(HINSTANCE /*hInstance*/, HINSTANCE /*hPrevInstance*/, 
                                 LPTSTR lpCmdLine, int nShowCmd)
 {
-
+	OleInitialize(NULL);
 #if 0
    // Allocate a new console window
    AllocConsole();

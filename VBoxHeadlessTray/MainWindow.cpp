@@ -511,7 +511,7 @@ LRESULT CMainWindow::OnCustomCommand(WORD wNotifyCode, WORD wID, HWND hWndCtl, B
 	}
 	else
 	{
-		int iError=(int)ShellExecute(NULL, m_vecCustomVerbs[iIndex], m_vecCustomCommands[iIndex], NULL, NULL, SW_SHOWNORMAL);
+		int iError=(int)(long long)ShellExecute(NULL, m_vecCustomVerbs[iIndex], m_vecCustomCommands[iIndex], NULL, NULL, SW_SHOWNORMAL);
 		if (iError<32)
 		{
 			SlxMessageBox(Format(L"Failed to %s '%s' (error %i)", m_vecCustomVerbs[iIndex], m_vecCustomCommands[iIndex], iError), MB_OK|MB_ICONHAND);

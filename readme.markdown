@@ -16,6 +16,7 @@ Common commands are readily available from the context menu:
 Download Links
 --------------
 
+* [VBoxHeadlessTray52Setup.exe](http://www.toptensoftware.com/downloads/VBoxHeadlessTray52Setup.exe) - for VirtualBox 5.2
 * [VBoxHeadlessTray51Setup.exe](http://www.toptensoftware.com/downloads/VBoxHeadlessTray51Setup.exe) - for VirtualBox 5.1
 * [VBoxHeadlessTray50Setup.exe](http://www.toptensoftware.com/downloads/VBoxHeadlessTray50Setup.exe) - for VirtualBox 5.0
 * [VBoxHeadlessTray43Setup.exe](http://www.toptensoftware.com/downloads/VBoxHeadlessTray43Setup.exe) - for VirtualBox 4.3

@@ -1,5 +1,6 @@
 # git-ls-files --others --exclude-from=.git/info/exclude
-
+.vs
+*.VC.db
 Build*
 Debug
 Release

@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup
+    Condition="'$(BuildNSISBeforeTargets)' == '' and '$(BuildNSISAfterTargets)' == '' and '$(ConfigurationType)' != 'Makefile'">
+    <BuildNSISBeforeTargets>Midl</BuildNSISBeforeTargets>
+    <BuildNSISAfterTargets>CustomBuild</BuildNSISAfterTargets>
+  </PropertyGroup>
+  <PropertyGroup>
+    <BuildNSISDependsOn
+      Condition="'$(ConfigurationType)' != 'Makefile'">_SelectedFiles;$(BuildNSISDependsOn)</BuildNSISDependsOn>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <BuildNSIS>
+      <CommandLineTemplate>"$(ProgramFiles)\nsis\makensis.exe" [AllOptions] [inputs]</CommandLineTemplate>
+      <Outputs>%(Filename).exe</Outputs>
+      <ExecutionDescription>Building NSIS script...</ExecutionDescription>
+    </BuildNSIS>
+  </ItemDefinitionGroup>
+</Project>

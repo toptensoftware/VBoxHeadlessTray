@@ -12,13 +12,11 @@
 #undef APSTUDIO_READONLY_SYMBOLS
 
 /////////////////////////////////////////////////////////////////////////////
-// English (U.S.) resources
+// English (United States) resources
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
-#ifdef _WIN32
 LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 #pragma code_page(1252)
-#endif //_WIN32
 
 #ifdef APSTUDIO_INVOKED
 /////////////////////////////////////////////////////////////////////////////
@@ -50,8 +48,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 5,1,0,1
- PRODUCTVERSION 5,1,0,1
+ FILEVERSION 5,2,0,1
+ PRODUCTVERSION 5,2,0,1
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -68,12 +66,12 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "Topten Software"
             VALUE "FileDescription", "VirtualBox Headless Tray"
-            VALUE "FileVersion", "5.0.0.0"
+            VALUE "FileVersion", "5.2.0.1"
             VALUE "InternalName", "VBoxHeadlessTray.exe"
             VALUE "LegalCopyright", "Copyright © 2009-2015 Topten Software.  All Rights Reserved"
             VALUE "OriginalFilename", "VBoxHeadlessTray.exe"
             VALUE "ProductName", "VirtualBox Headless Tray"
-            VALUE "ProductVersion", "5.1.0.0"
+            VALUE "ProductVersion", "5.2.0.1"
         END
     END
     BLOCK "VarFileInfo"
@@ -89,6 +87,7 @@ END
 //
 
 IDR_VBOXHEADLESSTRAY    REGISTRY                "VBoxHeadlessTray.rgs"
+
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -114,7 +113,7 @@ END
 //
 
 #ifdef APSTUDIO_INVOKED
-GUIDELINES DESIGNINFO 
+GUIDELINES DESIGNINFO
 BEGIN
     IDD_SELECTMACHINEDLG, DIALOG
     BEGIN
@@ -132,12 +131,12 @@ END
 // String Table
 //
 
-STRINGTABLE 
+STRINGTABLE
 BEGIN
     IDS_PROJNAME            "VBoxHeadlessTray"
 END
 
-#endif    // English (U.S.) resources
+#endif    // English (United States) resources
 /////////////////////////////////////////////////////////////////////////////
 
 
@@ -145,17 +144,15 @@ END
 // English (Australia) resources
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENA)
-#ifdef _WIN32
 LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_AUS
 #pragma code_page(1252)
-#endif //_WIN32
 
 /////////////////////////////////////////////////////////////////////////////
 //
 // Menu
 //
 
-IDR_CONTEXTMENUS MENU 
+IDR_CONTEXTMENUS MENU
 BEGIN
     POPUP "&TrayOn"
     BEGIN
@@ -196,14 +193,23 @@ END
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
 IDI_ICON                ICON                    "Icon.ico"
+
 IDI_ICONABORTED         ICON                    "icon_aborted.ico"
+
 IDI_ICONOFF             ICON                    "icon_off.ico"
+
 IDI_ICONPAUSED          ICON                    "icon_paused.ico"
+
 IDI_ICONSAVED           ICON                    "icon_saved.ico"
+
 IDI_ICONTRANS1          ICON                    "icon_trans1.ico"
+
 IDI_ICONTRANS2          ICON                    "icon_trans2.ico"
+
 IDI_ICONTRANS3          ICON                    "icon_trans3.ico"
+
 IDI_ICONRUNNING         ICON                    "icon_running.ico"
+
 #endif    // English (Australia) resources
 /////////////////////////////////////////////////////////////////////////////
 

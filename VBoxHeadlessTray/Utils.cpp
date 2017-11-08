@@ -167,6 +167,6 @@ void log(const char* psz, ...)
 	fprintf(g_log.GetFile(), "%.2i/%.2i/%.4i %.2i:%.2i:%.2i.%.3i %s", 
 						st.wDay, st.wMonth, st.wYear,
 						st.wHour, st.wMinute, st.wSecond, st.wMilliseconds,
-						str);
+						str.sz());
 	fflush(g_log.GetFile());
 }
