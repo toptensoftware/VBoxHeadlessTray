@@ -48,8 +48,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 5,2,0,1
- PRODUCTVERSION 5,2,0,1
+ FILEVERSION 6,0,4,0
+ PRODUCTVERSION 6,0,4,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -66,12 +66,12 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "Topten Software"
             VALUE "FileDescription", "VirtualBox Headless Tray"
-            VALUE "FileVersion", "5.2.0.1"
+            VALUE "FileVersion", "6.0.4.0"
             VALUE "InternalName", "VBoxHeadlessTray.exe"
-            VALUE "LegalCopyright", "Copyright © 2009-2015 Topten Software.  All Rights Reserved"
+            VALUE "LegalCopyright", "Copyright © 2009-2019 Topten Software.  All Rights Reserved"
             VALUE "OriginalFilename", "VBoxHeadlessTray.exe"
             VALUE "ProductName", "VirtualBox Headless Tray"
-            VALUE "ProductVersion", "5.2.0.1"
+            VALUE "ProductVersion", "6.0.4.0"
         END
     END
     BLOCK "VarFileInfo"
