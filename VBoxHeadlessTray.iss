@@ -6,7 +6,7 @@
 #define MyAppPublisher "Topten Software"
 #define MyAppURL "http://www.toptensoftware.com/VBoxHeadlessTray"
 #define MyAppExeName "VBoxHeadlessTray.exe"
-#define InstallDir "{pf64}\Topten Software\VBoxHeadlessTray"
+#define InstallDir "{pf}\Topten Software\VBoxHeadlessTray"
 #define SourceDir ".\VBoxHeadlessTray"
 
 [Setup]
