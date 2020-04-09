@@ -42,6 +42,8 @@ HRESULT CSelectMachineDlg::RefreshList()
 	CSafeArray psa;
 	RETURNIFFAILED(spVirtualBox->get_Machines(&psa));
 
+	auto guid = __uuidof(IMachine);
+
 	CComPtrVector<IMachine*> vecMachines;
 	vecMachines.InitFromSafeArray(psa);
 

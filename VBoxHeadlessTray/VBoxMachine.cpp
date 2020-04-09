@@ -353,7 +353,7 @@ bool CVBoxMachine::PowerUp()
 	}
 
 	CComPtr<IProgress> spProgress;
-	return SUCCEEDED(m_spMachine->LaunchVMProcess(spSession, CComBSTR("headless"), CComBSTR(""), &spProgress));
+	return SUCCEEDED(m_spMachine->LaunchVMProcess(spSession, CComBSTR("headless"), NULL, &spProgress));
 }
 
 bool CVBoxMachine::OpenGUI()
@@ -369,7 +369,7 @@ bool CVBoxMachine::OpenGUI()
 	}
 
 	CComPtr<IProgress> spProgress;
-	return SUCCEEDED(m_spMachine->LaunchVMProcess(spSession, CComBSTR("gui"), CComBSTR(""), &spProgress));
+	return SUCCEEDED(m_spMachine->LaunchVMProcess(spSession, CComBSTR("gui"), NULL, &spProgress));
 }
 
 

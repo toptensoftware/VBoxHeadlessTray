@@ -16,6 +16,8 @@ Common commands are readily available from the context menu:
 Download Links
 --------------
 
+* [VBoxHeadlessTray610Setup.exe](http://www.toptensoftware.com/downloads/VBoxHeadlessTray610Setup.exe) - for VirtualBox 6.1.0
+* [VBoxHeadlessTray604Setup.exe](http://www.toptensoftware.com/downloads/VBoxHeadlessTray604Setup.exe) - for VirtualBox 6.0.4
 * [VBoxHeadlessTray52Setup.exe](http://www.toptensoftware.com/downloads/VBoxHeadlessTray52Setup.exe) - for VirtualBox 5.2
 * [VBoxHeadlessTray51Setup.exe](http://www.toptensoftware.com/downloads/VBoxHeadlessTray51Setup.exe) - for VirtualBox 5.1
 * [VBoxHeadlessTray50Setup.exe](http://www.toptensoftware.com/downloads/VBoxHeadlessTray50Setup.exe) - for VirtualBox 5.0
@@ -43,62 +45,6 @@ automatically and resume the VM.
 
 To prevent a machine starting at windows logon, exit VBoxHeadlessTray before shutting 
 down windows, or use the -np option.
-
-### Version 1.1
-
-* Initial version, basic functionality and custom context menus
-
-### Version 1.2
-
-* Added ACPI commands for power button and sleep button (requires guest additions to be installed in the guest OS)
-* Added a new command to launch Remote Desktop for the hosted machine
-* Added two new commands "Open VirtualBox GUI" and "Go Headless" that switch between the headless hosting of the machine and the main VirtualBox GUI.  Note the machine needs to be saved and restored to perform this switch.
-* Reorganised the context menu a bit.
-
-### Version 3.2.0.1
-
-* Updated to work with VirtualBox 3.2
-* Changed version number to be in-sync with VirtualBox
-
-### Version 3.2.0.2
-
-* Fix to correctly locate VirtualBox when not installed in default location (uses HKLM\Software\Oracle\InstallDir)
-* Fix to not turn on VRDP when launching headless process. (uses VBoxHeadless.exe --vrdp config)
-
-### Version 4.0.0.0
-
-* Updated to work with VirtualBox 4.0
-* Fixes Resume command not working
-
-
-### Version 4.0.0.1
-
-* Fixed icon tray state reflecting state of incorrect VM.
-
-
-### Version 4.1.0.1
-
-* Updated to work with VirtualBox 4.1
-* Due to apparent bugs in VirtualBox itself (not send machine state change notifications), the tray icon may be a little slow to update when starting and stopping the VM through the VirtualBox GUI.
-
-### Version 4.2.0.1
-
-* Updated to work with VirtualBox 4.2
-
-### Version 4.2.0.3
-
-* Fix for a crash on shutdown with some VM's
-
-### Version 5.0
-
-* Updated to work with VirtualBox 5
-
-Special thanks to [Andy Hawkins](https://github.com/adhawkins) who did almost all the work on this.  Thanks Man!
-
-
-### Version 5.1
-
-* Updated to work with VirtualBox 5.1
 
 
 CommandLine Arguments

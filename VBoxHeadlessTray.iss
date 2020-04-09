@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "VBoxHeadlessTray"
-#define MyAppVersion "6.0.4"
+#define MyAppVersion "6.1.0"
 #define MyAppPublisher "Topten Software"
 #define MyAppURL "http://www.toptensoftware.com/VBoxHeadlessTray"
 #define MyAppExeName "VBoxHeadlessTray.exe"
@@ -24,7 +24,7 @@ DefaultDirName={#InstallDir}
 DisableDirPage=yes
 DefaultGroupName={#MyAppName}
 DisableProgramGroupPage=yes
-OutputBaseFilename=VBoxHeadlessTray604Setup
+OutputBaseFilename=VBoxHeadlessTray610Setup
 OutputDir=.
 Compression=lzma
 SolidCompression=yes
