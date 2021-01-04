@@ -171,7 +171,7 @@ protected:
 	bool					m_bCallbackRegistered;
 	HCALLBACKTIMER			m_hPollTimer;
 
-	bool SetError(const wchar_t* psz);
+	HRESULT SetError(HRESULT hr, const wchar_t* psz);
 	void OnMachineStateChange(IMachineStateChangedEvent* e);
 	HRESULT Exec(const wchar_t* pszCommandLine, DWORD* ppid=NULL, HANDLE* phProcess=NULL);
 

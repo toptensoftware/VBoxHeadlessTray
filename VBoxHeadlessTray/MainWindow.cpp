@@ -51,7 +51,7 @@ LRESULT CMainWindow::OnCreate(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHa
 	HRESULT hr=m_Machine.Open();
 	if (FAILED(hr))
 	{
-		SlxMessageBox(Format(L"Failed to open machine %s - %s", g_strMachineName, m_Machine.GetErrorMessage()));
+		return -1;
 	}
 
 	// Turn off auto run

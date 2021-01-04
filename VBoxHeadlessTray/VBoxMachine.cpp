@@ -140,7 +140,7 @@ HRESULT CVBoxMachine::Open()
 	if (FAILED(hr))
 	{
 		Close();
-		return SetError(Format(L"Failed to create VirtualBox COM server - %s", vboxFormatError(hr)));
+		return SetError(hr, Format(L"Failed to create VirtualBox COM server - %s", vboxFormatError(hr)));
 	}
 
 	// Get machine ID
@@ -150,7 +150,7 @@ HRESULT CVBoxMachine::Open()
 	if (FAILED(hr) || m_spMachine==NULL)
 	{
 		Close();
-		return SetError(Format(L"Machine \"%s\" not found - %s", m_strMachineName, vboxFormatError(hr)));
+		return SetError(hr, Format(L"Machine \"%s\" not found - %s", m_strMachineName, vboxFormatError(hr)));
 	}
 	m_spMachine->get_Id(&m_bstrMachineID);
 
@@ -221,7 +221,7 @@ void CVBoxMachine::Close()
 }
 
 // Set error message
-bool CVBoxMachine::SetError(const wchar_t* psz)
+HRESULT CVBoxMachine::SetError(HRESULT hr, const wchar_t* psz)
 {
 	log("Error: %S\n", psz);
 
@@ -230,7 +230,7 @@ bool CVBoxMachine::SetError(const wchar_t* psz)
 	{
 		m_pEvents->OnError(psz);
 	}
-	return false;
+	return hr;
 }
 
 void CVBoxMachine::OnMachineStateChange(IMachineStateChangedEvent* e)
@@ -349,7 +349,7 @@ bool CVBoxMachine::PowerUp()
 	HRESULT hr = spSession.CoCreateInstance(__uuidof(Session));
 	if (FAILED(hr))
 	{
-		return SetError(Format(L"Failed to create VirtualBox session object - %s", vboxFormatError(hr)));
+		return SetError(hr, Format(L"Failed to create VirtualBox session object - %s", vboxFormatError(hr)));
 	}
 
 	CComPtr<IProgress> spProgress;
@@ -365,7 +365,7 @@ bool CVBoxMachine::OpenGUI()
 	HRESULT hr = spSession.CoCreateInstance(__uuidof(Session));
 	if (FAILED(hr))
 	{
-		return SetError(Format(L"Failed to create VirtualBox session object - %s", vboxFormatError(hr)));
+		return SetError(hr, Format(L"Failed to create VirtualBox session object - %s", vboxFormatError(hr)));
 	}
 
 	CComPtr<IProgress> spProgress;
@@ -385,7 +385,7 @@ bool CVBoxMachine::SaveState()
 		HRESULT hr=spSession.CoCreateInstance(__uuidof(Session));
 		if (FAILED(hr))
 		{
-			return SetError(Format(L"Failed to create VirtualBox session object - %s", vboxFormatError(hr)));
+			return SetError(hr, Format(L"Failed to create VirtualBox session object - %s", vboxFormatError(hr)));
 		}
 
 		// Open existing session

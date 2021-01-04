@@ -5,6 +5,7 @@
 #include "VBoxHeadlessTray.h"
 #include "MainWindow.h"
 #include "SelectMachineDlg.h"
+#include "Utils.h"
 
 // Use Common Controls 6 - don't forget to call InitCommonControls or not even standard controls will work
 #pragma comment(linker,"/manifestdependency:\"type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
@@ -27,6 +28,13 @@ HRESULT CVBoxHeadlessTrayModule::Run(int nShowCmd)
 	CMainWindow MainWindow;
 	if (!MainWindow.Create())
 	{
+		if (ManageAutoRun(Format(L"VBoxHeadlessTray %s", g_strMachineName), maroQuery, NULL))
+		{
+			if (SlxMessageBox(Format(L"Would you like VBoxHeadlessTray to still try to start machine '%s' when Windows starts?", g_strMachineName), MB_YESNO | MB_ICONQUESTION) != IDYES)
+			{
+				ManageAutoRun(Format(L"VBoxHeadlessTray %s", g_strMachineName), maroClear, NULL);
+			}
+		}
 		return E_FAIL;
 	}
 

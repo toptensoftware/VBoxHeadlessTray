@@ -56,7 +56,8 @@ bool ManageAutoRun(const wchar_t* pszAppName, ManageAutoRunOp op, const wchar_t*
 			if (RegGetString(HKEY_CURRENT_USER, pszRunKey, pszAppName, str)!=ERROR_SUCCESS)
 				return false;
 
-			return IsEqualString(str, strCommandLine);
+			return !IsEmptyString(str);
+//			return IsEqualString(str, strCommandLine);
 		}
 	}
 
